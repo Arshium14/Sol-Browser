@@ -54,7 +54,11 @@ jobs:
                       candidates.append((version, device["name"], device["udid"]))
           if not candidates:
               raise SystemExit("No available iPad simulator running iPadOS 26.1 or newer")
-          version, name, udid = sorted(candidates, reverse=True)[0]
+          # Sol ships to iPadOS 26.1+, so test on that family when the runner
+          # has it; newer beta runtimes' WebKit can fail the upstream tests.
+          def rank(candidate):
+              return (candidate[0][0] == 26, candidate[0])
+          version, name, udid = sorted(candidates, key=rank, reverse=True)[0]
           print(f"Testing {name}, runtime {version}, {udid}")
           with open(os.environ["GITHUB_OUTPUT"], "a") as output:
               output.write(f"udid={udid}\n")

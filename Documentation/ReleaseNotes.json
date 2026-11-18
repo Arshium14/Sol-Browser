@@ -5769,6 +5769,10 @@
     "sol-tab-fill-formatting": {
       "category": "internal",
       "message": "The pinned tab fill reads as one formatted expression, keeping the shared tab surface within the fork's strict line style."
+    },
+    "sol-simulator-runtime-choice": {
+      "category": "internal",
+      "message": "The iPad test job prefers the iPadOS 26 simulator family Sol ships to, since newer beta runtimes' WebKit can fail the upstream browser tests."
     }
   }
 }
