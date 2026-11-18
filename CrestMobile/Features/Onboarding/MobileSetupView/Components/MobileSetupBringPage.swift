@@ -11,7 +11,7 @@ struct MobileSetupBringPage: View {
                 VStack(spacing: CrestSpacing.large) {
                     HStack(spacing: CrestSpacing.large) {
                         Image(systemName: "laptopcomputer")
-                        Image(systemName: CloudSyncConfiguration.configured(in: .main) == nil ? "icloud.slash" : "icloud.fill")
+                        Image(systemName: cloudSymbol)
                             .foregroundStyle(.tint)
                         Image(systemName: "iphone")
                     }
@@ -21,8 +21,8 @@ struct MobileSetupBringPage: View {
                         .font(.title3.weight(.semibold))
                         .multilineTextAlignment(.center)
                     Text(bringBody)
-                    .foregroundStyle(.secondary)
-                    .multilineTextAlignment(.center)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, CrestSpacing.medium)
@@ -36,18 +36,22 @@ struct MobileSetupBringPage: View {
         .scrollContentBackground(.hidden)
     }
 
+    private var cloudSymbol: String {
+        BrowserCloudSyncConfiguration.configured(in: .main) == nil ? "icloud.slash" : "icloud.fill"
+    }
+
     private var bringTitle: LocalizedStringKey {
-        if CloudSyncConfiguration.configured(in: .main) == nil {
+        if BrowserCloudSyncConfiguration.configured(in: .main) == nil {
             return "Set up Spaces on this device"
         }
         return "Bring tabs in with Crest on your Mac"
     }
 
     private var bringBody: LocalizedStringKey {
-        if CloudSyncConfiguration.configured(in: .main) == nil {
-            return "This build does not sync with iCloud, so tabs cannot come over from a Mac. Make and name Spaces here instead."
+        if BrowserCloudSyncConfiguration.configured(in: .main) == nil {
+            return "This build does not sync with iCloud. Make and name Spaces on this device instead."
         }
-        return "A Mac can read the browsers installed on it. Bring their Spaces and tabs into Crest there, and iCloud brings them here."
+        return "Bring Spaces and tabs into Crest on your Mac, and iCloud brings them here."
     }
 }
 

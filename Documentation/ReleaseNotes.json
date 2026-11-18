@@ -5757,6 +5757,10 @@
     "sol-ipad-sidebar-and-independent-build": {
       "category": "improved",
       "message": "Sol brings an Arc-inspired iPad sidebar with favorite tiles, quieter tab rows, compact navigation, and a bottom Space rail. Independent branding and unsigned IPA builds keep this fork separate from Crest; iCloud sync is unavailable in this build."
+    },
+    "sol-setup-copy-and-build-fixes": {
+      "category": "internal",
+      "message": "Sol setup names the app and says plainly when iCloud sync is unavailable in the build; the iPad simulator picker and the fork build checks follow the current toolchain."
     }
   }
 }

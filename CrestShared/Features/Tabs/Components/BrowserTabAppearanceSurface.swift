@@ -21,14 +21,16 @@ struct BrowserTabAppearanceSurface: ViewModifier {
         // or the hover tint re-renders the pins or the hovered row alone.
         let fill = isPinned ? BrowserTabAppearance.intensity(appearance.pinFill) : 0
         let hover = isHovering ? BrowserTabAppearance.intensity(appearance.hoverFill) : 0
+        let highContrast = reduceTransparency || contrast == .increased
+        let selectedBorder: Color = highContrast ? .primary : (selectedAccent ? accent : .clear)
+        let restingWhite = Color.white.opacity(colorScheme == .dark ? 0.08 : 0.24)
         content
             .modifier(
                 CrestInteractiveSurfaceModifier(
                     isSelected: isSelected, selectionEmphasis: selectionEmphasis,
                     isHovering: isHovering, cornerRadius: radius, isPressed: false,
                     showsRestingSurface: isPinned,
-                    selectedBorderColor: reduceTransparency || contrast == .increased
-                        ? .primary : (selectedAccent ? accent : .clear),
+                    selectedBorderColor: selectedBorder,
                     selectedBorderWidth: isPinned ? CrestLayout.pinnedAccentBorderWidth : 1,
                     customSelectedFill: reduceTransparency ? nil
                         : (isPinned && fill > 0 ? accent.opacity(fill * 0.5) : selectionLift),
@@ -37,7 +39,7 @@ struct BrowserTabAppearanceSurface: ViewModifier {
                     customHoverFill: hover > 0 && !reduceTransparency
                         ? Color.primary.mix(with: accent, by: hover).opacity(CrestOpacity.hover) : nil,
                     customRestingFill: isPinned && !reduceTransparency
-                        ? (fill > 0 ? accent.opacity(fill * 0.2) : Color.white.opacity(colorScheme == .dark ? 0.08 : 0.24))
+                        ? (fill > 0 ? accent.opacity(fill * 0.2) : restingWhite)
                         : nil,
                     restingBorderColor: showsBorder ? accent : .clear)
             )

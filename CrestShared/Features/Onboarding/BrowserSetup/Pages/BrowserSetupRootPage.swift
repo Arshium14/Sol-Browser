@@ -21,9 +21,9 @@ struct BrowserSetupRootPage: View {
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
                 Text(welcomeBody)
-                .font(BrowserSetupRootPageMetrics.bodyFont)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
+                    .font(BrowserSetupRootPageMetrics.bodyFont)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
         }
         .padding(BrowserSetupRootPageMetrics.inset)
@@ -31,7 +31,7 @@ struct BrowserSetupRootPage: View {
     }
 
     private var welcomeBody: LocalizedStringKey {
-        if CloudSyncConfiguration.configured(in: .main) == nil {
+        if BrowserCloudSyncConfiguration.configured(in: .main) == nil {
             return "Set up \(ProductIdentity.name) on this device. iCloud sync is not available in this build."
         }
         return welcome.opensCrest

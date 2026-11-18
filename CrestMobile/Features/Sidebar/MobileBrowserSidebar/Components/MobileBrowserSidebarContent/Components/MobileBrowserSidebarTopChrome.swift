@@ -113,12 +113,16 @@ struct MobileBrowserSidebarTopChrome: View {
                 .font(.system(size: 17, weight: .regular))
             }
             .buttonStyle(CrestChromeButtonStyle())
-            .accessibilityLabel(
-                configuration.sidebarToggleUndocks ? "Undock Sidebar"
-                    : configuration.sidebarIsDocked ? "Hide Sidebar" : "Dock Sidebar"
-            )
+            .accessibilityLabel(sidebarToggleLabel)
             .accessibilityIdentifier("browser-sidebar-toggle")
         }
+    }
+
+    private var sidebarToggleLabel: LocalizedStringKey {
+        if configuration.sidebarToggleUndocks {
+            return "Undock Sidebar"
+        }
+        return configuration.sidebarIsDocked ? "Hide Sidebar" : "Dock Sidebar"
     }
 
     /// The strip's controls as items in the side toolbar's top group, or at
