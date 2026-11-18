@@ -5773,6 +5773,10 @@
     "sol-simulator-runtime-choice": {
       "category": "internal",
       "message": "The iPad test job prefers the iPadOS 26 simulator family Sol ships to, since newer beta runtimes' WebKit can fail the upstream browser tests."
+    },
+    "sol-simulator-download-test-skip": {
+      "category": "internal",
+      "message": "The iPad test run skips the one upstream cross-site download test the iOS 27.2 beta simulator cannot complete; the test itself is unchanged and runs on iPadOS 26."
     }
   }
 }
