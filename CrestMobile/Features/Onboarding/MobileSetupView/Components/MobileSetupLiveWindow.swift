@@ -22,7 +22,7 @@ struct MobileSetupLiveWindow: View {
                 }
                 .shadow(color: .black.opacity(cornerRadius > 0 ? 0.22 : 0), radius: 20, y: 10)
                 .accessibilityElement(children: .contain)
-                .accessibilityLabel(Text("Preview of Crest"))
+                .accessibilityLabel(Text("Preview of \(ProductIdentity.name)"))
         }
     }
 

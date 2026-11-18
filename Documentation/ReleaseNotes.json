@@ -5761,6 +5761,10 @@
     "sol-setup-copy-and-build-fixes": {
       "category": "internal",
       "message": "Sol setup names the app and says plainly when iCloud sync is unavailable in the build; the iPad simulator picker and the fork build checks follow the current toolchain."
+    },
+    "sol-test-host-and-preview-label": {
+      "category": "internal",
+      "message": "The navigation test host answers the cosmetic-filter bridge as the page host protocol now requires, and the setup preview's accessibility label names Sol."
     }
   }
 }
