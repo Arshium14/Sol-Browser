@@ -9,7 +9,7 @@ import Foundation
 struct BrowserSharedLink: Equatable, Sendable {
     // MARK: - Static Variables
 
-    private static let handOffScheme = "crest"
+    private static let handOffScheme = "sol-crest"
     private static let handOffHost = "open"
     private static let urlParameter = "url"
     private static let webSchemes: Set<String> = ["http", "https"]

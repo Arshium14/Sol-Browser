@@ -54,8 +54,8 @@ struct BrowserSpaceHeader: View {
                 identity
 
                 Text(space.name)
-                    .font(.callout.weight(.semibold))
-                    .foregroundStyle(.primary)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.secondary)
                     .lineLimit(1)
 
                 if space.requiresAuthentication {

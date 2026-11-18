@@ -16,15 +16,11 @@ struct BrowserSetupRootPage: View {
                 .frame(width: BrowserSetupRootPageMetrics.markSize, height: BrowserSetupRootPageMetrics.markSize)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: CrestSpacing.small) {
-                Text("Welcome to Crest")
+                Text("Welcome to \(ProductIdentity.name)")
                     .font(BrowserSetupRootPageMetrics.titleFont)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityAddTraits(.isHeader)
-                Text(
-                    welcome.opensCrest
-                        ? "Your Spaces came in from iCloud, ready to use."
-                        : "Bring your tabs over, then set up your Spaces."
-                )
+                Text(welcomeBody)
                 .font(BrowserSetupRootPageMetrics.bodyFont)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
@@ -32,6 +28,15 @@ struct BrowserSetupRootPage: View {
         }
         .padding(BrowserSetupRootPageMetrics.inset)
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: BrowserSetupRootPageMetrics.alignment)
+    }
+
+    private var welcomeBody: LocalizedStringKey {
+        if CloudSyncConfiguration.configured(in: .main) == nil {
+            return "Set up \(ProductIdentity.name) on this device. iCloud sync is not available in this build."
+        }
+        return welcome.opensCrest
+            ? "Your Spaces came in from iCloud, ready to use."
+            : "Bring your tabs over, then set up your Spaces."
     }
 }
 

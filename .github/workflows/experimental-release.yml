@@ -27,6 +27,7 @@ concurrency:
 jobs:
   preflight:
     name: Resolve experimental publication
+    if: github.repository == 'pauljoda/Crest'
     runs-on: ubuntu-latest
     outputs:
       asset_base: ${{ steps.release.outputs.asset_base }}

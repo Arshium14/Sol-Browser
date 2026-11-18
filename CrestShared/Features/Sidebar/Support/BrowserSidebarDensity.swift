@@ -19,7 +19,7 @@ struct BrowserSidebarDensity: Equatable, Sendable {
     /// steps, and the steps that now carry their names.
     private static let presetSteps: [(stored: Double, step: Double)] = [(0.85, 0.8), (1.15, 1.2)]
     private static let pointerBodySize: CGFloat = 13
-    private static let touchBodySize: CGFloat = 17
+    private static let touchBodySize: CGFloat = 15
     private static let pointerCaptionSize: CGFloat = 10
     private static let touchCaptionSize: CGFloat = 12
     private static let minimumTouchTarget: CGFloat = 44

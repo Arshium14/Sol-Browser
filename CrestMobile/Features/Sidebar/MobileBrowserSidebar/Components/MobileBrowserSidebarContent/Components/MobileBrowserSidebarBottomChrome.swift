@@ -14,8 +14,51 @@ struct MobileBrowserSidebarBottomChrome: View {
                 .frame(height: 0)
                 .accessibilityHidden(true)
                 .toolbar { toolbarItems }
+        } else if configuration.utilityPresentationStyle == .inline {
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 0) {
+                    utilityButtons
+                    Spacer(minLength: 0)
+                    if showsNewTab {
+                        newTabButton
+                            .fixedSize(horizontal: true, vertical: false)
+                    }
+                }
+                VStack(alignment: .trailing, spacing: 0) {
+                    HStack(spacing: 0) {
+                        utilityButtons
+                        Spacer(minLength: 0)
+                    }
+                    if showsNewTab {
+                        newTabButton
+                            .fixedSize(horizontal: true, vertical: false)
+                    }
+                }
+            }
+            .labelStyle(.iconOnly)
+            .buttonStyle(CrestChromeButtonStyle(controlSize: nil))
+            .padding(.horizontal, BrowserSidebarMetrics.layerInset)
+            .padding(.vertical, CrestSpacing.extraSmall)
+            .modifier(
+                SpaceForegroundBlend(
+                    spaces: configuration.context.availableSpaces,
+                    selectedSpaceID: configuration.context.browser.shownSpace?.id)
+            )
         } else {
             capsule
+        }
+    }
+
+    @ViewBuilder
+    private var utilityButtons: some View {
+        if showsSpaceActions {
+            MobileSpaceActionButtons(
+                browser: configuration.context.browser,
+                pages: configuration.pages,
+                utilityPresentationStyle: configuration.utilityPresentationStyle,
+                configuration: configuration.spaceActionsConfiguration
+            )
+            .fixedSize(horizontal: true, vertical: false)
         }
     }
 
@@ -70,8 +113,6 @@ struct MobileBrowserSidebarBottomChrome: View {
         .accessibilityIdentifier("browser-sidebar-toggle")
     }
 
-    /// New Tab rides with the sidebar toggle, so a new tab is always a tap
-    /// away whether or not the toggle is on.
     private var newTabButton: some View {
         Button(action: configuration.openNewTab) {
             MobileSpaceUtilityButtonLabel(title: "New Tab", systemImage: "plus")

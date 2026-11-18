@@ -14,10 +14,10 @@ enum BrowserLookAndFeelDefaults {
     static let addressBarPlacement = BrowserAddressBarPlacement.standard
     static let surfaceMaterial = CrestSurfaceMaterial.standard
     static let surfaceTone = CrestSurfaceTone.standard
-    static let cornerRadius: Double = 10
+    static let cornerRadius: Double = 8
     static let tabScale: Double = 1
     static let sidebarSpacing = BrowserSidebarSpacing.standard
-    static let pinColumns = 0
+    static let pinColumns = 4
     static let pinsFillRow = false
     static let spaceIconSizing = BrowserSpaceIconSizing.standard
     static let spaceIconScale: Double = 1
@@ -33,10 +33,10 @@ enum BrowserLookAndFeelDefaults {
     /// A new device's address field appearance, made fresh as ``tabs`` is.
     @MainActor static var address: BrowserAddressAppearance { BrowserAddressAppearance() }
     static let foldersAlwaysVisible = false
-    static let foldersShowTabCounts = true
+    static let foldersShowTabCounts = false
     static let previewsTabsOnHover = true
     static let previewsFoldersOnHover = true
-    static let foldersShowBorders = true
+    static let foldersShowBorders = false
     static let foldersIconOnly = false
     static let foldersTintTitle = false
     static let groupsAlwaysVisible = false

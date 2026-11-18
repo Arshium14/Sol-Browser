@@ -11,18 +11,16 @@ struct MobileSetupBringPage: View {
                 VStack(spacing: CrestSpacing.large) {
                     HStack(spacing: CrestSpacing.large) {
                         Image(systemName: "laptopcomputer")
-                        Image(systemName: "icloud.fill")
+                        Image(systemName: CloudSyncConfiguration.configured(in: .main) == nil ? "icloud.slash" : "icloud.fill")
                             .foregroundStyle(.tint)
                         Image(systemName: "iphone")
                     }
                     .font(.system(size: MobileSetupBringPageMetrics.symbolSize, weight: .light))
                     .accessibilityHidden(true)
-                    Text("Bring tabs in with Crest on your Mac")
+                    Text(bringTitle)
                         .font(.title3.weight(.semibold))
                         .multilineTextAlignment(.center)
-                    Text(
-                        "A Mac can read the browsers installed on it. Bring their Spaces and tabs into Crest there, and iCloud brings them here."
-                    )
+                    Text(bringBody)
                     .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                 }
@@ -36,6 +34,20 @@ struct MobileSetupBringPage: View {
         }
         .formStyle(.grouped)
         .scrollContentBackground(.hidden)
+    }
+
+    private var bringTitle: LocalizedStringKey {
+        if CloudSyncConfiguration.configured(in: .main) == nil {
+            return "Set up Spaces on this device"
+        }
+        return "Bring tabs in with Crest on your Mac"
+    }
+
+    private var bringBody: LocalizedStringKey {
+        if CloudSyncConfiguration.configured(in: .main) == nil {
+            return "This build does not sync with iCloud, so tabs cannot come over from a Mac. Make and name Spaces here instead."
+        }
+        return "A Mac can read the browsers installed on it. Bring their Spaces and tabs into Crest there, and iCloud brings them here."
     }
 }
 

@@ -15,7 +15,7 @@ settings:
   base:
     ARCHS: arm64
     CODE_SIGN_STYLE: Automatic
-    DEVELOPMENT_TEAM: 3U2R97HLXF
+    DEVELOPMENT_TEAM: ""
     DEVELOPMENT_LANGUAGE: en
     ENABLE_HARDENED_RUNTIME: YES
     MACOSX_DEPLOYMENT_TARGET: "26.1"
@@ -428,7 +428,7 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: CrestMobile/Configuration/CrestMobile-Info.plist
         IPHONEOS_DEPLOYMENT_TARGET: "26.1"
-        CREST_MOBILE_BUNDLE_IDENTIFIER: com.pauldavis.crest.mobile-native-core
+        CREST_MOBILE_BUNDLE_IDENTIFIER: com.arshium.sol.crest.mobile-native-core
         PRODUCT_BUNDLE_IDENTIFIER: "$(CREST_MOBILE_BUNDLE_IDENTIFIER)"
         PRODUCT_MODULE_NAME: CrestMobile
         PRODUCT_NAME: CrestNativeCore
@@ -460,17 +460,13 @@ targets:
     templates: [PortableCoreMobile]
     type: application
     platform: iOS
-    # Scheme BuildableName is derived from productName, not the PRODUCT_NAME
-    # build setting. Keep both as Crest so `xcodegen generate` reproduces the
-    # committed schemes instead of emitting CrestMobile.app.
-    productName: Crest
+    productName: Sol
     sources:
       - path: Documentation/ReleaseNotes.json
         buildPhase: resources
       - path: CrestShared
         excludes:
-          - Resources/CrestIcon/Sources
-          - Resources/CrestIcon/Validation
+          - Resources/CrestIcon
       - path: CrestMobile
     dependencies:
       - target: CrestShareExtension
@@ -486,13 +482,12 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: CrestMobile/Configuration/CrestMobile-Info.plist
         IPHONEOS_DEPLOYMENT_TARGET: "26.1"
-        CREST_MOBILE_BUNDLE_IDENTIFIER: com.pauldavis.crest
+        CREST_MOBILE_BUNDLE_IDENTIFIER: com.arshium.sol.crest
         PRODUCT_BUNDLE_IDENTIFIER: "$(CREST_MOBILE_BUNDLE_IDENTIFIER)"
         PRODUCT_MODULE_NAME: CrestMobile
-        PRODUCT_NAME: Crest
+        PRODUCT_NAME: Sol
         TARGETED_DEVICE_FAMILY: "1,2"
-        ASSETCATALOG_COMPILER_APPICON_NAME: Crest
-        ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES: "CrestWinter CrestLion CrestStorm CrestDragon CrestMeadow CrestIron CrestRiver CrestSun CrestVigil"
+        ASSETCATALOG_COMPILER_APPICON_NAME: Sol
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
   # The share sheet entry hands shared links to the iOS app. It compiles the
   # hand-off it shares with the app, never the core, which an extension's
@@ -509,7 +504,7 @@ targets:
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: CrestShareExtension/Info.plist
         IPHONEOS_DEPLOYMENT_TARGET: "26.1"
-        CREST_MOBILE_BUNDLE_IDENTIFIER: com.pauldavis.crest
+        CREST_MOBILE_BUNDLE_IDENTIFIER: com.arshium.sol.crest
         PRODUCT_BUNDLE_IDENTIFIER: $(CREST_MOBILE_BUNDLE_IDENTIFIER).share
         PRODUCT_MODULE_NAME: CrestShareExtension
         PRODUCT_NAME: CrestShareExtension
@@ -527,9 +522,9 @@ targets:
         SWIFT_INCLUDE_PATHS: "$(inherited) $(PROJECT_DIR)/CrestContracts/include"
         BUNDLE_LOADER: "$(TEST_HOST)"
         GENERATE_INFOPLIST_FILE: YES
-        PRODUCT_BUNDLE_IDENTIFIER: com.pauldavis.crest.mobile.tests
+        PRODUCT_BUNDLE_IDENTIFIER: com.arshium.sol.crest.tests
         TARGETED_DEVICE_FAMILY: "1,2"
-        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Crest.app/Crest"
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Sol.app/Sol"
 schemes:
   # The app schemes source Config/Crest.lldbinit, so the debugger never
   # stops on the core runtime's own signals.
@@ -558,6 +553,8 @@ schemes:
     run:
       customLLDBInit: "$(SRCROOT)/Config/Crest.lldbinit"
     test:
+      environmentVariables:
+        CREST_ISOLATED_SESSION: "1"
       targets:
         - CrestMobileTests
   CrestMobileNativeCore:

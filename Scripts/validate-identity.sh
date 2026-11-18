@@ -62,8 +62,12 @@ rg -q '^name: Crest$' project.yml
 rg -q '^  Crest:$' project.yml
 rg -q '^  CrestMobile:$' project.yml
 rg -q 'CREST_MAC_BUNDLE_IDENTIFIER: com\.pauldavis\.crest$' project.yml
-rg -q 'CREST_MOBILE_BUNDLE_IDENTIFIER: com\.pauldavis\.crest$' project.yml
+rg -q 'CREST_MOBILE_BUNDLE_IDENTIFIER: com\.arshium\.sol\.crest$' project.yml
 rg -q 'PRODUCT_MODULE_NAME: Crest$' project.yml
 rg -q 'PRODUCT_MODULE_NAME: CrestMobile$' project.yml
+rg -q 'PRODUCT_NAME: Sol$' project.yml
+rg -q 'ASSETCATALOG_COMPILER_APPICON_NAME: Sol$' project.yml
+rg -q 'static let name = "Sol"' CrestShared/Application/ProductIdentity.swift
+rg -q 'static let bundleIdentifier = "com.arshium.sol.crest"' CrestShared/Application/ProductIdentity.swift
 
-print "Crest identity validation passed."
+print "Sol mobile identity and Crest module validation passed."

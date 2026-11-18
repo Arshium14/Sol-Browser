@@ -36,9 +36,12 @@ struct MobileBrowserSidebarBottomChromeLayout<Content: View>: View {
                             )
                         }
 
-                        MobileBrowserSidebarBottomChrome(
-                            configuration: configuration
-                        )
+                        if configuration.utilityPresentationStyle == .inline {
+                            MobileBrowserSidebarChrome(configuration: configuration)
+                                .fixedSize(horizontal: false, vertical: true)
+                                .zIndex(1)
+                        }
+                        MobileBrowserSidebarBottomChrome(configuration: configuration)
                     }
                 }
         } else {

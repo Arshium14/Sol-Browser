@@ -21,8 +21,8 @@ enum BrowserCommandPaletteMetrics {
     /// The least room a palette rising to the top of the screen keeps there,
     /// where the safe area leaves less, as a Peek does.
     static let fieldRegionTopMargin: CGFloat = 10
-    static let maximumCardWidth: CGFloat = 720
-    static let cardCornerRadius: CGFloat = 26
+    static let maximumCardWidth: CGFloat = 640
+    static let cardCornerRadius: CGFloat = 18
     /// How far below full size the card's contents start while the card grows
     /// out of the address field, and end while it shrinks back.
     static let morphContentScale: CGFloat = 0.97

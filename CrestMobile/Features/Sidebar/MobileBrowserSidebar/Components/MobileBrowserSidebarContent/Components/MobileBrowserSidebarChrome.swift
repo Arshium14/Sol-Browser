@@ -6,35 +6,25 @@ struct MobileBrowserSidebarChrome: View {
     let configuration: MobileBrowserSidebarContentConfiguration
 
     var body: some View {
-        VStack(spacing: 0) {
-            MobileBrowserSidebarTopChrome(configuration: configuration)
-
-            BrowserSpaceSwitcher(
-                browser: configuration.context.browser,
-                downloadCenter: configuration.context.pageAccess.downloadCenter,
-                capabilities: configuration.context.capabilities,
-                selectSpace: configuration.context.selectSpace
-            )
-        }
+        BrowserSpaceSwitcher(
+            browser: configuration.context.browser,
+            downloadCenter: configuration.context.pageAccess.downloadCenter,
+            capabilities: configuration.context.capabilities,
+            selectSpace: configuration.context.selectSpace
+        )
         .modifier(
             SpaceForegroundBlend(
                 spaces: configuration.context.availableSpaces,
                 selectedSpaceID: configuration.context.browser.shownSpace?.id)
         )
-        // A touch lift is a system drag session, and it reaches only the drop
-        // interactions it passes over. The Space pages below feed their own
-        // lists; without a feed here the picker never sees the pointer, and a
-        // tab cannot be dropped on a Space.
+        // The picker needs its own system drop feed for cross-Space tab drops.
         .modifier(
             MobileBrowserReorderDropFeed(
                 browser: configuration.context.browser,
                 spaceAccess: configuration.context.spaceAccess
             )
         )
-        // The system draws the dragged preview on a touch device, so the reason a
-        // Space refuses the tab is shown here, under the picker, while the finger
-        // is over it. Releasing ends the drag and clears it with the refusal.
-        .overlay(alignment: .bottom) {
+        .overlay(alignment: configuration.utilityPresentationStyle == .inline ? .top : .bottom) {
             if let message = sidebarInteraction.sidebarReorderState.constraintMessage {
                 Label(message, systemImage: "nosign")
                     .font(CrestTypography.metadata)
@@ -44,6 +34,7 @@ struct MobileBrowserSidebarChrome: View {
                         CrestSurfaceLayer(shape: .rect(cornerRadius: BrowserSidebarMetrics.layerCornerRadius(depth: 0)))
                     }
                     .alignmentGuide(.bottom) { $0[.top] - CrestSpacing.small }
+                    .alignmentGuide(.top) { $0[.bottom] + CrestSpacing.small }
                     .allowsHitTesting(false)
             }
         }

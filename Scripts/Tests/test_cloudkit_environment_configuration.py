@@ -14,16 +14,18 @@ class CloudKitEnvironmentConfigurationTests(unittest.TestCase):
         self.assertIn("ICLOUD_CONTAINER_ENVIRONMENT: Development", project)
         self.assertIn("ICLOUD_CONTAINER_ENVIRONMENT: Production", project)
 
-        for relative_path in (
-            "CrestMac/Configuration/Crest.entitlements",
-            "CrestMobile/Configuration/CrestMobile.entitlements",
-        ):
-            with (REPOSITORY_ROOT / relative_path).open("rb") as entitlements_file:
-                entitlements = plistlib.load(entitlements_file)
-            self.assertEqual(
-                entitlements["com.apple.developer.icloud-container-environment"],
-                "$(ICLOUD_CONTAINER_ENVIRONMENT)",
-            )
+        with (REPOSITORY_ROOT / "CrestMac/Configuration/Crest.entitlements").open("rb") as entitlements_file:
+            entitlements = plistlib.load(entitlements_file)
+        self.assertEqual(
+            entitlements["com.apple.developer.icloud-container-environment"],
+            "$(ICLOUD_CONTAINER_ENVIRONMENT)",
+        )
+
+        # Sol ships without CloudKit: the mobile entitlements must stay empty
+        # so sideloaded builds never claim a container they cannot reach.
+        with (REPOSITORY_ROOT / "CrestMobile/Configuration/CrestMobile.entitlements").open("rb") as entitlements_file:
+            mobile_entitlements = plistlib.load(entitlements_file)
+        self.assertEqual(mobile_entitlements, {})
 
     def test_mobile_production_scheme_runs_the_release_configuration(self) -> None:
         scheme_path = (

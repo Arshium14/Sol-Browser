@@ -40,10 +40,10 @@ struct CrestSpaceIconPickerStyle: Hashable, Sendable {
     private static let pointerDotSegmentWidth: CGFloat = 16
     private static let touchDotSegmentWidth: CGFloat = 26
     static let touch = CrestSpaceIconPickerStyle(
-        name: "touch", height: 48, trackPadding: CrestSpaceIconPickerMetrics.trackPadding, fixedCornerRadius: nil,
-        minimumSegmentWidth: 52, smallestSegment: CGSize(width: 44, height: 42), overflowButtonWidth: 44,
-        fillsSegments: true, trackFillOpacity: 0.08,
-        trackBorderOpacity: 0, tintsSelection: false, selectionFillOpacity: 0.22)
+        name: "touch", height: 48, trackPadding: 2, fixedCornerRadius: 10,
+        minimumSegmentWidth: 44, smallestSegment: CGSize(width: 44, height: 44), overflowButtonWidth: 44,
+        fillsSegments: false, trackFillOpacity: 0,
+        trackBorderOpacity: 0, tintsSelection: false, selectionFillOpacity: 0.14)
 
     // MARK: - Variables
 

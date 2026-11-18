@@ -1,6 +1,6 @@
 enum ProductIdentity {
-    static let name = "Crest"
-    static let bundleIdentifier = "com.pauldavis.crest"
+    static let name = "Sol"
+    static let bundleIdentifier = "com.arshium.sol.crest"
     static let serviceNamespace = bundleIdentifier
     static let storageDirectoryName = name
 }

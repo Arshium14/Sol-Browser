@@ -59,7 +59,7 @@ final class BrowserAddressAppearance {
     /// Whether a live site's address field offers a button that copies its
     /// URL, beside Site Controls. Only the Mac's sidebar field draws it.
     var showsCopyURLButton = false { didSet { changed() } }
-    var display: Display = .twoLines { didSet { changed() } }
+    var display: Display = .siteOnly { didSet { changed() } }
     var color: BrandColor? { didSet { changed() } }
     /// Called after any choice changes, so its owner can save it.
     @ObservationIgnored var changed: () -> Void = {}
@@ -117,7 +117,7 @@ extension BrowserAddressAppearance: @MainActor Codable {
         animatesIntoCommandPalette =
             (try? values.decode(Bool.self, forKey: .animatesIntoCommandPalette)) ?? true
         showsCopyURLButton = (try? values.decode(Bool.self, forKey: .showsCopyURLButton)) ?? false
-        display = (try? values.decode(Display.self, forKey: .display)) ?? .twoLines
+        display = (try? values.decode(Display.self, forKey: .display)) ?? .siteOnly
         color = try? values.decode(BrandColor.self, forKey: .color)
     }
 

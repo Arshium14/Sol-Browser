@@ -15,6 +15,7 @@ struct BrowserSidebarNavigationControls<TrailingAccessory: View>: View {
     /// right. Along the top of a page the strip stands clear of them.
     private let besideWindowControls: Bool?
     private let trailingAccessory: TrailingAccessory
+    private let trailingAccessoryWidth: CGFloat
 
     /// Back and forward both stay in the strip at every width, disabled
     /// while there is nowhere to go, so each keeps the place the reader
@@ -24,6 +25,7 @@ struct BrowserSidebarNavigationControls<TrailingAccessory: View>: View {
         port: BrowserSidebarNavigationPort,
         capabilities: BrowserInteractionCapabilities,
         besideWindowControls: Bool? = nil,
+        trailingAccessoryWidth: CGFloat = 0,
         @ViewBuilder trailingAccessory: () -> TrailingAccessory = {
             EmptyView()
         }
@@ -32,6 +34,7 @@ struct BrowserSidebarNavigationControls<TrailingAccessory: View>: View {
         self.capabilities = capabilities
         self.besideWindowControls = besideWindowControls
         self.trailingAccessory = trailingAccessory()
+        self.trailingAccessoryWidth = trailingAccessoryWidth
     }
 
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
@@ -59,6 +62,7 @@ struct BrowserSidebarNavigationControls<TrailingAccessory: View>: View {
                     growsWithContent: metrics.growsWithContent
                 )
             )
+            .frame(minWidth: 0, maxWidth: .infinity)
             .onGeometryChange(for: CGFloat.self, of: \.size.width) { width = $0 }
     }
 
@@ -101,7 +105,9 @@ struct BrowserSidebarNavigationControls<TrailingAccessory: View>: View {
     /// which sit beside the sidebar unless it is on the right.
     private var fit: BrowserSidebarNavigationStripFit {
         capabilities.navigationControlMetrics.fitting(
-            width: width, includesDeveloperMenu: isDeveloperMode,
+            width: width - trailingAccessoryWidth
+                - (trailingAccessoryWidth > 0 ? capabilities.navigationControlMetrics.controlSpacing : 0),
+            includesDeveloperMenu: isDeveloperMode,
             besideWindowControls: besideWindowControls ?? !BrowserDeviceAppearanceStore.shared.sidebarOnRight)
     }
 

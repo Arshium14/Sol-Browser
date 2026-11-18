@@ -6,12 +6,18 @@ struct MobileBrowserSidebarPager: View {
     var body: some View {
         GeometryReader { _ in
             VStack(spacing: 0) {
-                MobileBrowserSidebarChrome(configuration: configuration)
+                MobileBrowserSidebarTopChrome(configuration: configuration)
+                    .modifier(
+                        SpaceForegroundBlend(
+                            spaces: configuration.context.availableSpaces,
+                            selectedSpaceID: configuration.context.browser.shownSpace?.id)
+                    )
                     .fixedSize(horizontal: false, vertical: true)
-                    // The chrome's refusal label hangs below its bounds, over the
-                    // pager. Drawing the chrome later keeps the label visible;
-                    // the label takes no hits, so the pages keep theirs.
-                    .zIndex(1)
+                if configuration.utilityPresentationStyle == .sheet {
+                    MobileBrowserSidebarChrome(configuration: configuration)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .zIndex(1)
+                }
                 BrowserSidebarSpacePager(context: configuration.context) { space, isSelected in
                     MobileBrowserSidebarSpaceSurface(configuration: configuration, space: space, isSelected: isSelected)
                 }

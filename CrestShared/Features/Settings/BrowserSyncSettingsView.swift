@@ -10,6 +10,20 @@ struct BrowserSyncSettingsView: View {
     @State private var showsDiagnostics = false
 
     var body: some View {
+        if cloudSync.containerIdentifier == nil {
+            BrowserSettingsPane(.sync) {
+                Section("Spaces and tabs") {
+                    Label("iCloud sync is unavailable in this build", systemImage: "icloud.slash")
+                    Text("Saved passwords can still sync through iCloud Keychain when password sync is enabled.")
+                        .foregroundStyle(.secondary)
+                }
+            }
+        } else {
+            configuredSettings
+        }
+    }
+
+    private var configuredSettings: some View {
         BrowserSettingsPane(.sync) {
             Section("iCloud") {
                 Toggle("Sync with iCloud", isOn: $cloudSync.isEnabled)

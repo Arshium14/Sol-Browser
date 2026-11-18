@@ -72,6 +72,20 @@ struct MobilePageActionsContent: View {
         }
         .labelStyle(.iconOnly)
 
+        if pages.activeURL?.isLocalDevelopmentAddress == true {
+            Section("Developer") {
+                Button(
+                    "Reload (Ignore Cache)",
+                    systemImage: "arrow.trianglehead.2.clockwise.rotate.90",
+                    action: pages.reloadFromOrigin
+                )
+                Button("Clear Cookies and Reload", systemImage: BrowsingDataCategory.siteData.symbol ?? "trash") {
+                    Task { await pages.clearSiteData(.siteData) }
+                }
+            }
+            .crestMenuActionLabelStyle()
+        }
+
         if pages.canAddToHomeScreen {
             Button("Add to Home Screen", systemImage: "plus.app") {
                 pages.addToHomeScreen(from: source)

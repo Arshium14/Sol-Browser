@@ -160,7 +160,7 @@ struct BrowserSidebarNavigationControlMetrics: Equatable, Sendable {
         width: CGFloat, includesDeveloperMenu: Bool, besideWindowControls: Bool
     ) -> BrowserSidebarNavigationStripFit {
         let clearance = besideWindowControls ? windowControlsClearance : nil
-        if required(clearance, developerMenu: includesDeveloperMenu) <= width || narrowing == nil {
+        if required(clearance, developerMenu: includesDeveloperMenu) <= width {
             return BrowserSidebarNavigationStripFit(
                 metrics: self, showsReload: true, showsDeveloperMenu: includesDeveloperMenu)
         }
@@ -178,7 +178,7 @@ struct BrowserSidebarNavigationControlMetrics: Equatable, Sendable {
     /// reload, and the developer menu where asked for.
     private func required(_ clearance: CGFloat?, developerMenu: Bool) -> CGFloat {
         let menu = developerMenu ? reloadMenuControlSize.width : 0
-        return (clearance ?? leadingInset + leadingSpacerMinimum) + controlSize.width * 3 + controlSpacing * 2
+        return (clearance ?? leadingInset + leadingSpacerMinimum) + controlSize.width * 3 + controlSpacing * 3
             + menu + trailingInset
     }
 

@@ -1,0 +1,150 @@
+name: Build Sol IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sol-ipa-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  simulator:
+    name: Test on iPad Simulator
+    runs-on: xcode-27
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Prepare diagnostic artifacts
+        run: mkdir -p "$RUNNER_TEMP/sol-simulator-artifacts"
+
+      - uses: ./.github/actions/prepare-apple-build
+
+      - name: Select an available iPad
+        id: ipad
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          devices = json.loads(subprocess.check_output(["xcrun", "simctl", "list", "devices", "available", "-j"]))["devices"]
+          candidates = []
+          for runtime, entries in devices.items():
+              if "iOS-" not in runtime:
+                  continue
+              version = tuple(map(int, runtime.rsplit("iOS-", 1)[1].split("-")))
+              if version < (26, 1):
+                  continue
+              for device in entries:
+                  if device.get("isAvailable") and device["name"].startswith("iPad"):
+                      candidates.append((version, device["name"], device["udid"]))
+          if not candidates:
+              raise SystemExit("No available iPad simulator running iPadOS 26.1 or newer")
+          version, name, udid = sorted(candidates, reverse=True)[0]
+          print(f"Testing {name}, runtime {version}, {udid}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write(f"udid={udid}\n")
+          PY
+
+      - name: Build and test the iPad app
+        env:
+          IPAD_UDID: ${{ steps.ipad.outputs.udid }}
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Crest.xcodeproj \
+            -scheme CrestMobile \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$IPAD_UDID" \
+            -parallel-testing-enabled NO \
+            -derivedDataPath "$RUNNER_TEMP/sol-simulator" \
+            -resultBundlePath "$RUNNER_TEMP/sol-simulator-artifacts/iPadTests.xcresult" \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee "$RUNNER_TEMP/sol-simulator-artifacts/xcodebuild.log"
+
+      - name: Package simulator app
+        run: |
+          ditto -c -k --keepParent \
+            "$RUNNER_TEMP/sol-simulator/Build/Products/Debug-iphonesimulator/Sol.app" \
+            "$RUNNER_TEMP/sol-simulator-artifacts/Sol-iPad-Simulator.zip"
+
+      - name: Upload simulator results and app
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sol-iPad-Simulator-results
+          path: ${{ runner.temp }}/sol-simulator-artifacts/
+          if-no-files-found: warn
+          retention-days: 7
+
+  ipa:
+    name: Build unsigned iPad and iPhone IPA
+    runs-on: xcode-27
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Prepare build artifacts
+        run: mkdir -p "$RUNNER_TEMP/sol-device-artifacts" "$RUNNER_TEMP/sol-package/Payload"
+
+      - uses: ./.github/actions/prepare-apple-build
+
+      - name: Validate source boundaries
+        run: |
+          git diff --check
+          python3 Scripts/check-architecture.py
+          python3 Scripts/release_note_catalog.py
+
+      - name: Build unsigned device app
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Crest.xcodeproj \
+            -scheme CrestMobile \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath "$RUNNER_TEMP/sol-device" \
+            -resultBundlePath "$RUNNER_TEMP/sol-device-artifacts/DeviceBuild.xcresult" \
+            CODE_SIGNING_ALLOWED=NO \
+            2>&1 | tee "$RUNNER_TEMP/sol-device-artifacts/xcodebuild.log"
+
+      - name: Package unsigned IPA
+        run: |
+          app="$RUNNER_TEMP/sol-device/Build/Products/Release-iphoneos/Sol.app"
+          test -f "$app/Sol"
+          test -d "$app/PlugIns/CrestShareExtension.appex"
+          ditto "$app" "$RUNNER_TEMP/sol-package/Payload/Sol.app"
+          ditto -c -k --keepParent "$RUNNER_TEMP/sol-package/Payload" "$RUNNER_TEMP/Sol-unsigned.ipa"
+          unzip -t "$RUNNER_TEMP/Sol-unsigned.ipa"
+          printf '%s\n' '### Sol unsigned IPA' 'Re-sign with your own Apple identity before installing. Minimum iPadOS/iOS: 26.1. iCloud sync and managed browser passkeys are not enabled in this build.' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload unsigned IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sol-Browser-unsigned-ipa
+          path: ${{ runner.temp }}/Sol-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload device build diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sol-device-build-results
+          path: ${{ runner.temp }}/sol-device-artifacts/
+          if-no-files-found: warn
+          retention-days: 7

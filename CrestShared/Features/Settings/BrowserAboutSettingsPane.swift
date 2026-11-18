@@ -43,7 +43,7 @@ struct BrowserAboutSettingsPane: View {
                         }
                         .padding(.vertical, CrestSpacing.small)
                     } label: {
-                        Text("What's New in Crest \(buildInformation.version)")
+                        Text("What's New in \(ProductIdentity.name) \(buildInformation.version)")
                             .font(.body.weight(.medium))
                     }
                     .disclosureGroupStyle(
@@ -53,28 +53,19 @@ struct BrowserAboutSettingsPane: View {
             }
 
             Section {
+                Text("Based on Crest by Paul Davis and contributors.")
                 BrowserAboutLink(
-                    title: "Share Feedback on r/CrestBrowser",
-                    imageName: "AboutReddit",
-                    destination: BrowserAboutLinks.feedback,
-                    identifier: "about-feedback-link"
-                )
-                BrowserAboutLink(
-                    title: "Report an Issue",
+                    title: "Crest Source and License",
                     imageName: "AboutGitHub",
-                    destination: BrowserAboutLinks.issues,
-                    identifier: "about-issues-link"
-                )
-                BrowserAboutLink(
-                    title: "View the Roadmap",
-                    imageName: "AboutGitHub",
-                    destination: BrowserAboutLinks.roadmap,
-                    identifier: "about-roadmap-link"
+                    destination: BrowserAboutLinks.upstreamSource,
+                    identifier: "about-upstream-source-link"
                 )
             } header: {
-                Text("Community and support")
+                Text("Open source")
             } footer: {
-                CrestFormFootnote("Reddit is public. Leave out private details.")
+                CrestFormFootnote(
+                    "Independent MPL-2.0 fork, not affiliated with Crest or Arc. Crest's maintainers do not support Sol."
+                )
             }
         }
     }

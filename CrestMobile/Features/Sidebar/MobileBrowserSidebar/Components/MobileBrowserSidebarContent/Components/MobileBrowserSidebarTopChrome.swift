@@ -3,6 +3,7 @@ import SwiftUI
 struct MobileBrowserSidebarTopChrome: View {
     @Environment(\.mobileBrowserControlPlacement) private var controlPlacement
     let configuration: MobileBrowserSidebarContentConfiguration
+    @State private var navigationWidth: CGFloat = .infinity
 
     var body: some View {
         if configuration.utilityPresentationStyle == .inline {
@@ -14,12 +15,39 @@ struct MobileBrowserSidebarTopChrome: View {
                     .accessibilityHidden(true)
                     .toolbar { navigationToolbarItems }
             } else {
-                BrowserSidebarNavigationControls(
-                    port: navigationPort,
-                    capabilities: configuration.context.capabilities
-                ) {
-                    pageActionsMenu()
+                Group {
+                    if navigationWidth < 218 {
+                        VStack(spacing: 0) {
+                            HStack(spacing: 0) {
+                                sidebarToggle
+                                Spacer(minLength: 0)
+                                pageActionsMenu()
+                            }
+                            .buttonStyle(CrestChromeButtonStyle())
+                            .padding(.horizontal, BrowserSidebarMetrics.layerInset)
+                            BrowserSidebarNavigationControls(
+                                port: navigationPort,
+                                capabilities: configuration.context.capabilities,
+                                besideWindowControls: false
+                            )
+                        }
+                    } else {
+                        HStack(spacing: 0) {
+                            sidebarToggle
+                            BrowserSidebarNavigationControls(
+                                port: navigationPort,
+                                capabilities: configuration.context.capabilities,
+                                besideWindowControls: false,
+                                trailingAccessoryWidth: 44
+                            ) {
+                                pageActionsMenu()
+                            }
+                        }
+                        .padding(.leading, BrowserSidebarMetrics.layerInset)
+                    }
                 }
+                .frame(minWidth: 0, maxWidth: .infinity)
+                .onGeometryChange(for: CGFloat.self, of: \.size.width) { navigationWidth = $0 }
             }
 
             if let utilitySurface = configuration.context.utilityPresentation
@@ -71,6 +99,25 @@ struct MobileBrowserSidebarTopChrome: View {
             .padding(.horizontal, 12)
             .padding(.top, 8)
             .padding(.bottom, 4)
+        }
+    }
+
+    @ViewBuilder
+    private var sidebarToggle: some View {
+        if configuration.showsSidebarToggle {
+            Button(action: configuration.toggleSidebar) {
+                Image(
+                    systemName: BrowserDeviceAppearanceStore.shared.sidebarOnRight
+                        ? "sidebar.right" : "sidebar.left"
+                )
+                .font(.system(size: 17, weight: .regular))
+            }
+            .buttonStyle(CrestChromeButtonStyle())
+            .accessibilityLabel(
+                configuration.sidebarToggleUndocks ? "Undock Sidebar"
+                    : configuration.sidebarIsDocked ? "Hide Sidebar" : "Dock Sidebar"
+            )
+            .accessibilityIdentifier("browser-sidebar-toggle")
         }
     }
 
