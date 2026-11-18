@@ -5765,6 +5765,10 @@
     "sol-test-host-and-preview-label": {
       "category": "internal",
       "message": "The navigation test host answers the cosmetic-filter bridge as the page host protocol now requires, and the setup preview's accessibility label names Sol."
+    },
+    "sol-tab-fill-formatting": {
+      "category": "internal",
+      "message": "The pinned tab fill reads as one formatted expression, keeping the shared tab surface within the fork's strict line style."
     }
   }
 }

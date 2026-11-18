@@ -32,7 +32,8 @@ struct BrowserTabAppearanceSurface: ViewModifier {
                     showsRestingSurface: isPinned,
                     selectedBorderColor: selectedBorder,
                     selectedBorderWidth: isPinned ? CrestLayout.pinnedAccentBorderWidth : 1,
-                    customSelectedFill: reduceTransparency ? nil
+                    customSelectedFill: reduceTransparency
+                        ? nil
                         : (isPinned && fill > 0 ? accent.opacity(fill * 0.5) : selectionLift),
                     // Hover keeps its standard weight; the setting only decides how much of
                     // the accent is in it, from the neutral hover to the accent itself.
