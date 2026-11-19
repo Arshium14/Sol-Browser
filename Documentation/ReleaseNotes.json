@@ -5793,6 +5793,10 @@
     "sol-smooth-space-switching": {
       "category": "improved",
       "message": "Switching Spaces on iPad glides the pager, backdrop, chrome tones and page cards together rather than landing at once, so the change reads as one continuous move."
+    },
+    "sol-chrome-swift-format": {
+      "category": "internal",
+      "message": "The new iPad chrome sources satisfy the repository's swift-format contract: trailing newlines on the new files and the translucent fill's closing parenthesis on its own line."
     }
   }
 }

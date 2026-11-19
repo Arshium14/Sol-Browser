@@ -96,7 +96,8 @@ struct CrestInteractiveSurfaceModifier: ViewModifier {
             shape
                 .fill(
                     (isSelected || isPressed ? customSelectedFill : customRestingFill)
-                        ?? Color.white.opacity(colorScheme == .dark ? 0.16 : 0.62))
+                        ?? Color.white.opacity(colorScheme == .dark ? 0.16 : 0.62)
+                )
                 .overlay { if isHovering { shape.fill(hoverFill) } }
         } else if isHovering {
             shape.fill(hoverFill)
