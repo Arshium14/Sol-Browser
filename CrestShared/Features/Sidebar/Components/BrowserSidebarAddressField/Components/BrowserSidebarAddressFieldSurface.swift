@@ -26,6 +26,8 @@ struct BrowserSidebarAddressFieldSurface: ViewModifier {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.accessibilityReduceTransparency) private var reduceTransparency
+    @Environment(\.colorScheme) private var colorScheme
+    @Environment(\.sidebarTranslucentSurfaces) private var translucentSurfaces
 
     @Environment(\.spaceChromeAccent) private var spaceAccent
 
@@ -77,7 +79,14 @@ struct BrowserSidebarAddressFieldSurface: ViewModifier {
     private var layers: some View {
         ZStack(alignment: .leading) {
             if !isGlass {
-                CrestSurfaceLayer(shape: fieldShape)
+                if translucentSurfaces && !reduceTransparency {
+                    // A composited sidebar gives the material no gradient to
+                    // sample, so the field stands on a plain translucent fill.
+                    fieldShape.fill(Color.white.opacity(colorScheme == .dark ? 0.14 : 0.42))
+                    fieldShape.strokeBorder(.primary.opacity(0.08), lineWidth: 0.5)
+                } else {
+                    CrestSurfaceLayer(shape: fieldShape)
+                }
             }
             if !reduceTransparency {
                 fieldShape.fill(accent.opacity(BrowserTabAppearance.intensity(appearance.fill) * 0.4))

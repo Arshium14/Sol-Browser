@@ -27,6 +27,7 @@ struct CrestInteractiveSurfaceModifier: ViewModifier {
     @Environment(\.colorSchemeContrast) private var contrast
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.deviceColorScheme) private var deviceColorScheme
+    @Environment(\.sidebarTranslucentSurfaces) private var translucentSurfaces
 
     func body(content: Content) -> some View {
         let shape = RoundedRectangle(
@@ -67,24 +68,36 @@ struct CrestInteractiveSurfaceModifier: ViewModifier {
             // Content on the material reads in the material's scheme.
             .environment(
                 \.colorScheme,
-                showsMaterial ? CrestSurfaceTone.shownScheme(over: colorScheme, window: deviceColorScheme) : colorScheme
+                drawsMaterial ? CrestSurfaceTone.shownScheme(over: colorScheme, window: deviceColorScheme) : colorScheme
             )
     }
 
     /// Whether the surface draws the device's material under the content.
     private var showsMaterial: Bool { isSelected || isPressed || showsRestingSurface }
 
+    /// A composited sidebar cannot give the material the Space gradient to
+    /// sample, so its layers stand on plain translucent fills instead.
+    private var drawsMaterial: Bool {
+        showsMaterial && !(translucentSurfaces && !reduceTransparency)
+    }
+
     /// Selected, pressed and resting surfaces are layers of the device's
     /// material, wearing their accent tint; hover is only ever a tint, laid
     /// over that material or, on a plain row, alone.
     @ViewBuilder
     private func surface(in shape: RoundedRectangle) -> some View {
-        if showsMaterial {
+        if drawsMaterial {
             CrestSurfaceLayer(
                 shape: shape,
                 tint: isSelected || isPressed ? customSelectedFill : customRestingFill,
                 hoverTint: isHovering ? hoverFill : nil
             )
+        } else if showsMaterial {
+            shape
+                .fill(
+                    (isSelected || isPressed ? customSelectedFill : customRestingFill)
+                        ?? Color.white.opacity(colorScheme == .dark ? 0.16 : 0.62))
+                .overlay { if isHovering { shape.fill(hoverFill) } }
         } else if isHovering {
             shape.fill(hoverFill)
         }

@@ -87,11 +87,11 @@ struct PlatformSpacePager<Content: View>: View {
                     if progress.isPersonDriven {
                         commitVisibleSpace()
                     } else {
-                        show(selectedSpaceID)
+                        show(selectedSpaceID, using: proxy)
                     }
                 }
                 .onChange(of: selectedSpaceID) { _, spaceID in
-                    show(spaceID)
+                    show(spaceID, using: proxy)
                 }
                 .onChange(of: jumpOrder) { _, _ in
                     // The Space a jump reached stands elsewhere in the
@@ -136,7 +136,7 @@ struct PlatformSpacePager<Content: View>: View {
         if accepted != spaceID { visibleSpaceID = accepted }
     }
 
-    private func show(_ spaceID: UUID) {
+    private func show(_ spaceID: UUID, using proxy: ScrollViewProxy) {
         guard visibleSpaceID != spaceID else { return }
         if !reduceMotion, let visibleSpaceID {
             // The Space on show keeps its place in the jump's order, so the
@@ -147,8 +147,11 @@ struct PlatformSpacePager<Content: View>: View {
             transaction.disablesAnimations = true
             withTransaction(transaction) { jumpOrder = order?.map(\.id) }
         }
-        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.24)) {
+        // The scroll itself is the clock the backdrop, chrome tones and page
+        // cards follow, so it must glide rather than land at once.
+        withAnimation(reduceMotion ? nil : .easeInOut(duration: 0.3)) {
             visibleSpaceID = spaceID
+            proxy.scrollTo(spaceID, anchor: .center)
         }
     }
 

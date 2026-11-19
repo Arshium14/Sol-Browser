@@ -12,6 +12,7 @@ struct BrowserTabAppearanceSurface: ViewModifier {
     @Environment(\.sidebarLayerDepth) private var depth
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.colorSchemeContrast) private var contrast
+    @Environment(\.sidebarTranslucentSurfaces) private var translucentSurfaces
 
     func body(content: Content) -> some View {
         let radius = BrowserSidebarMetrics.layerCornerRadius(depth: depth)
@@ -23,7 +24,6 @@ struct BrowserTabAppearanceSurface: ViewModifier {
         let hover = isHovering ? BrowserTabAppearance.intensity(appearance.hoverFill) : 0
         let highContrast = reduceTransparency || contrast == .increased
         let selectedBorder: Color = highContrast ? .primary : (selectedAccent ? accent : .clear)
-        let restingWhite = Color.white.opacity(colorScheme == .dark ? 0.08 : 0.24)
         content
             .modifier(
                 CrestInteractiveSurfaceModifier(
@@ -56,5 +56,14 @@ struct BrowserTabAppearanceSurface: ViewModifier {
 
     private var selectionLift: Color {
         Color.white.opacity(colorScheme == .dark ? 0.16 : 0.62)
+    }
+
+    /// Over the Space gradient alone the tile needs a touch more lift than
+    /// over the device's material, which already lightens it.
+    private var restingWhite: Color {
+        Color.white.opacity(
+            colorScheme == .dark
+                ? (translucentSurfaces ? 0.12 : 0.08)
+                : (translucentSurfaces ? 0.3 : 0.24))
     }
 }

@@ -2,12 +2,19 @@ import SwiftUI
 
 struct MobileBrowserSidebarTopChrome: View {
     @Environment(\.mobileBrowserControlPlacement) private var controlPlacement
+    @Environment(\.mobileBrowserAddressInTopBar) private var addressInTopBar
     let configuration: MobileBrowserSidebarContentConfiguration
     @State private var navigationWidth: CGFloat = .infinity
 
     var body: some View {
         if configuration.utilityPresentationStyle == .inline {
-            if controlPlacement.movesControlsToToolbar {
+            if addressInTopBar {
+                // The window's top bar carries the navigation and address; the
+                // sidebar keeps only a utility's search toolbar when one shows.
+                if let utilitySurface = configuration.context.utilityPresentation.surface {
+                    utilitySearchToolbar(utilitySurface)
+                }
+            } else if controlPlacement.movesControlsToToolbar {
                 // The strip's controls are toolbar items; the address field
                 // leads, held off the sidebar's top edge as it is off its sides.
                 Color.clear
@@ -50,39 +57,14 @@ struct MobileBrowserSidebarTopChrome: View {
                 .onGeometryChange(for: CGFloat.self, of: \.size.width) { navigationWidth = $0 }
             }
 
-            if let utilitySurface = configuration.context.utilityPresentation
-                .surface
-            {
-                BrowserUtilitySearchToolbar(
-                    surface: utilitySurface,
-                    searchText: configuration.context.utilitySearchText,
-                    filter: configuration.context.utilityFilter,
-                    morphNamespace: configuration.compactChromeNamespace,
-                    morph: .utilitySearch(spaceID: selectedSpaceID),
-                    clearHistory: confirmClearHistory
-                )
-                .padding(.horizontal, BrowserSidebarMetrics.layerInset)
-                .padding(.bottom, 4)
-                .transition(.opacity.combined(with: .move(edge: .trailing)))
-            } else {
-                BrowserSidebarAddressField(
-                    configuration: addressConfiguration,
-                    fieldContextMenu: {
-                        if let pageActions = selectedPageActions,
-                            pageActions.isAvailable,
-                            !configuration.isAddressEditing.wrappedValue
-                        {
-                            MobilePageActionsContent(
-                                browser: configuration.context.browser,
-                                pages: pageActions
-                            )
-                            .tint(.primary)
-                        }
-                    }
-                )
-                .modifier(SurfaceToneAppearance())
-                .padding(.horizontal, BrowserSidebarMetrics.layerInset)
-                .padding(.bottom, 4)
+            if !addressInTopBar {
+                if let utilitySurface = configuration.context.utilityPresentation
+                    .surface
+                {
+                    utilitySearchToolbar(utilitySurface)
+                } else {
+                    addressField
+                }
             }
         }
 
@@ -100,6 +82,41 @@ struct MobileBrowserSidebarTopChrome: View {
             .padding(.top, 8)
             .padding(.bottom, 4)
         }
+    }
+
+    private func utilitySearchToolbar(_ surface: BrowserUtilitySurface) -> some View {
+        BrowserUtilitySearchToolbar(
+            surface: surface,
+            searchText: configuration.context.utilitySearchText,
+            filter: configuration.context.utilityFilter,
+            morphNamespace: configuration.compactChromeNamespace,
+            morph: .utilitySearch(spaceID: selectedSpaceID),
+            clearHistory: confirmClearHistory
+        )
+        .padding(.horizontal, BrowserSidebarMetrics.layerInset)
+        .padding(.bottom, 4)
+        .transition(.opacity.combined(with: .move(edge: .trailing)))
+    }
+
+    private var addressField: some View {
+        BrowserSidebarAddressField(
+            configuration: addressConfiguration,
+            fieldContextMenu: {
+                if let pageActions = selectedPageActions,
+                    pageActions.isAvailable,
+                    !configuration.isAddressEditing.wrappedValue
+                {
+                    MobilePageActionsContent(
+                        browser: configuration.context.browser,
+                        pages: pageActions
+                    )
+                    .tint(.primary)
+                }
+            }
+        )
+        .modifier(SurfaceToneAppearance())
+        .padding(.horizontal, BrowserSidebarMetrics.layerInset)
+        .padding(.bottom, 4)
     }
 
     @ViewBuilder

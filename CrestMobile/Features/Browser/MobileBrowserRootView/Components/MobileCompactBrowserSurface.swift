@@ -68,7 +68,9 @@ struct MobileCompactBrowserSurface<
                                 showSidebar: showSidebar,
                                 commitSidebarWidth: commitSidebarWidth,
                                 sidebar: floatingSidebar,
-                                detail: floatingDetail
+                                detail: floatingDetail,
+                                topBar: EmptyView(),
+                                allowsAddressTopBar: false
                             )
                         }
                     }

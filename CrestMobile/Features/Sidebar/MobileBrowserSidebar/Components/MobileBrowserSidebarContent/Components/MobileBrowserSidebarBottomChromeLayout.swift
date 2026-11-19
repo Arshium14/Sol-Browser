@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MobileBrowserSidebarBottomChromeLayout<Content: View>: View {
+    @Environment(\.mobileBrowserControlPlacement) private var controlPlacement
     let configuration: MobileBrowserSidebarContentConfiguration
     let content: Content
 
@@ -36,7 +37,12 @@ struct MobileBrowserSidebarBottomChromeLayout<Content: View>: View {
                             )
                         }
 
-                        if configuration.utilityPresentationStyle == .inline {
+                        // The bottom rail holds the switcher itself; only a
+                        // toolbar layout, whose chrome draws no rail, keeps it
+                        // above the bottom chrome.
+                        if configuration.utilityPresentationStyle == .inline,
+                            controlPlacement.movesControlsToToolbar
+                        {
                             MobileBrowserSidebarChrome(configuration: configuration)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .zIndex(1)

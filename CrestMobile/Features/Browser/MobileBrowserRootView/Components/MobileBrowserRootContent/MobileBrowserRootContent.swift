@@ -325,7 +325,20 @@ struct MobileBrowserRootContent: View, BrowserChromeAnimating {
                     .clipped()
                     .environment(
                         \.browserSettingsUsesLiveSidebar,
-                        navigation.regularSidebarIsDocked && layout.reservesSidebarWidth)
+                        navigation.regularSidebarIsDocked && layout.reservesSidebarWidth),
+                    topBar: MobileRegularTopBar(
+                        browser: browser,
+                        pages: pages,
+                        spaceAccess: spaceAccess,
+                        address: model.addressBinding,
+                        isAddressEditing: $isAddressEditing,
+                        activateAddress: openLocation,
+                        submitAddress: submitAddress,
+                        compactChromeNamespace: compactChromeNamespace,
+                        commandPaletteHandoff: commandPaletteHandoff,
+                        showHistory: presentHistoryFromCommand,
+                        toggleSidebar: toggleRegularSidebar
+                    )
                 )
                 .onChange(of: layout.splitsPagesAtFold, initial: true) { _, splits in
                     navigation.adaptToFoldedSplit(splits)

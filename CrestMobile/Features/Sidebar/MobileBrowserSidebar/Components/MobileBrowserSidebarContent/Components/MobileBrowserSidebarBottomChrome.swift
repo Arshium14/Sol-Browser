@@ -15,20 +15,23 @@ struct MobileBrowserSidebarBottomChrome: View {
                 .accessibilityHidden(true)
                 .toolbar { toolbarItems }
         } else if configuration.utilityPresentationStyle == .inline {
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 0) {
-                    utilityButtons
-                    Spacer(minLength: 0)
-                    if showsNewTab {
-                        newTabButton
-                            .fixedSize(horizontal: true, vertical: false)
-                    }
-                }
-                VStack(alignment: .trailing, spacing: 0) {
+            // Arc's bottom rail: the Space switcher along the bottom with the
+            // archive at its leading end and New Tab at its trailing end, and
+            // the Space's remaining controls quiet above it.
+            VStack(spacing: 0) {
+                if showsSpaceActions {
                     HStack(spacing: 0) {
-                        utilityButtons
+                        spaceActionButtons(subset: .withoutArchive)
                         Spacer(minLength: 0)
                     }
+                }
+                HStack(spacing: 6) {
+                    if showsSpaceActions {
+                        spaceActionButtons(subset: .archiveOnly)
+                    }
+                    MobileBrowserSidebarChrome(configuration: configuration)
+                        .layoutPriority(1)
+                    Spacer(minLength: 0)
                     if showsNewTab {
                         newTabButton
                             .fixedSize(horizontal: true, vertical: false)
@@ -50,16 +53,15 @@ struct MobileBrowserSidebarBottomChrome: View {
     }
 
     @ViewBuilder
-    private var utilityButtons: some View {
-        if showsSpaceActions {
-            MobileSpaceActionButtons(
-                browser: configuration.context.browser,
-                pages: configuration.pages,
-                utilityPresentationStyle: configuration.utilityPresentationStyle,
-                configuration: configuration.spaceActionsConfiguration
-            )
-            .fixedSize(horizontal: true, vertical: false)
-        }
+    private func spaceActionButtons(subset: MobileSpaceActionButtons.Subset) -> some View {
+        MobileSpaceActionButtons(
+            browser: configuration.context.browser,
+            pages: configuration.pages,
+            utilityPresentationStyle: configuration.utilityPresentationStyle,
+            configuration: configuration.spaceActionsConfiguration,
+            subset: subset
+        )
+        .fixedSize(horizontal: true, vertical: false)
     }
 
     /// The controls as items in the side toolbar's bottom group, or along the

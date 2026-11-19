@@ -5777,6 +5777,22 @@
     "sol-simulator-download-test-skip": {
       "category": "internal",
       "message": "The iPad test run skips the one upstream cross-site download test the iOS 27.2 beta simulator cannot complete; the test itself is unchanged and runs on iPadOS 26."
+    },
+    "sol-translucent-sidebar-surfaces": {
+      "category": "fixed",
+      "message": "The iPad sidebar's essentials tiles and address field read as true translucent layers over the Space gradient instead of flat fills, since a composited sidebar cannot give the system material a backdrop to sample."
+    },
+    "sol-arc-bottom-rail": {
+      "category": "improved",
+      "message": "The iPad sidebar's bottom rail follows Arc: the Space switcher along the bottom with the archive at its leading end and New Tab at its trailing end, and the Space's remaining controls quiet above."
+    },
+    "sol-address-bar-placement-choice": {
+      "category": "new",
+      "message": "Look and Feel offers the Arc and Zen address bar choice on iPad: keep the field in the sidebar, or move it to a bar across the window's top with navigation leading and page actions trailing."
+    },
+    "sol-smooth-space-switching": {
+      "category": "improved",
+      "message": "Switching Spaces on iPad glides the pager, backdrop, chrome tones and page cards together rather than landing at once, so the change reads as one continuous move."
     }
   }
 }

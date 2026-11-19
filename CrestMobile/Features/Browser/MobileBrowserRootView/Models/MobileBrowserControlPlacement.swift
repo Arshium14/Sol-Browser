@@ -135,6 +135,10 @@ struct MobileBrowserControlPlacement: Equatable, Sendable {
 
 extension EnvironmentValues {
     @Entry var mobileBrowserControlPlacement: MobileBrowserControlPlacement = .chrome
+    /// Whether the regular shell draws the address bar across the window's top
+    /// instead of in the sidebar, so the sidebar leaves out its own navigation
+    /// strip and address field.
+    @Entry var mobileBrowserAddressInTopBar: Bool = false
 }
 
 extension ToolbarContent {

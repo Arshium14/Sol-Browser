@@ -76,4 +76,8 @@ extension EnvironmentValues {
     /// A material that replaces the device's choice under it, as a preview
     /// that shows each one sets. Nil draws the device's choice.
     @Entry var crestSurfaceMaterial: CrestSurfaceMaterial? = nil
+    /// Whether the layers above the sidebar's ground draw as plain translucent
+    /// fills over it instead of the device's material, which a composited
+    /// sidebar cannot sample the Space gradient through.
+    @Entry var sidebarTranslucentSurfaces: Bool = false
 }

@@ -3,7 +3,7 @@ import SwiftUI
 /// The regular-width mobile shell uses the same sidebar surface and reservation
 /// components as macOS. Mobile owns only the touch reveal control and the
 /// narrow-window decision that a docked sidebar cannot consume an unusable page.
-struct MobileRegularBrowserLayout<Sidebar: View, Detail: View>: View,
+struct MobileRegularBrowserLayout<Sidebar: View, Detail: View, TopBar: View>: View,
     BrowserChromeAnimating
 {
     @Environment(\.accessibilityReduceMotion) var reduceMotion
@@ -13,6 +13,15 @@ struct MobileRegularBrowserLayout<Sidebar: View, Detail: View>: View,
     private var sidebarOnRight: Bool { appearance.sidebarOnRight }
     private var sidebarEdge: HorizontalEdge {
         BrowserChromeAppearance.sidebarEdge(onRight: sidebarOnRight, in: layoutDirection)
+    }
+
+    /// Whether the address bar stands across the window's top rather than in
+    /// the sidebar. A shell whose controls already ride a system top bar keeps
+    /// them there instead.
+    private var showsAddressTopBar: Bool {
+        allowsAddressTopBar
+            && appearance.addressBarPlacement.showsBarInPageCards
+            && !controlPlacement.movesControlsToToolbar
     }
 
     let layout: MobileRegularWindowLayout
@@ -26,8 +35,22 @@ struct MobileRegularBrowserLayout<Sidebar: View, Detail: View>: View,
     let commitSidebarWidth: (CGFloat) -> Void
     let sidebar: Sidebar
     let detail: Detail
+    let topBar: TopBar
+    /// Whether this shell offers the window-top address bar at all. The compact
+    /// shell's floating reuse keeps the address in its sidebar.
+    var allowsAddressTopBar: Bool = true
 
     var body: some View {
+        VStack(spacing: 0) {
+            if showsAddressTopBar {
+                topBar
+            }
+            pageLayout
+        }
+        .environment(\.mobileBrowserAddressInTopBar, showsAddressTopBar)
+    }
+
+    private var pageLayout: some View {
         BrowserSidebarPageLayout(
             presentation: effectivePresentation, width: layout.reservedSidebarWidth, edge: sidebarEdge
         ) {
@@ -95,6 +118,7 @@ struct MobileRegularBrowserLayout<Sidebar: View, Detail: View>: View,
     /// beside the status bar its controls lead, clear of the corner, and keep
     /// the layout margin.
     private var sidebarTopMargin: CGFloat {
+        if showsAddressTopBar { return 0 }
         if controlPlacement.runsDownSide {
             return MobileBrowserRootLayout.displayCornerClearance
         }
@@ -102,9 +126,9 @@ struct MobileRegularBrowserLayout<Sidebar: View, Detail: View>: View,
     }
 
     /// Whether the sidebar takes the band beside the status bar: not where
-    /// the controls ride in the top bar there.
+    /// the controls ride in the top bar there, nor where the address bar does.
     private var runsSidebarToTopEdge: Bool {
-        layout.runsSidebarToTopEdge && !controlPlacement.carriesControlsInTopBar
+        layout.runsSidebarToTopEdge && !controlPlacement.carriesControlsInTopBar && !showsAddressTopBar
     }
 
     /// Compact regular windows retain the desktop floating-card treatment, but
