@@ -5797,6 +5797,22 @@
     "sol-chrome-swift-format": {
       "category": "internal",
       "message": "The new iPad chrome sources satisfy the repository's swift-format contract: trailing newlines on the new files and the translucent fill's closing parenthesis on its own line."
+    },
+    "sol-top-bar-translucent-surfaces": {
+      "category": "fixed",
+      "message": "The window-top address bar wears the same translucent fills over a Space's gradient as the sidebar, instead of an opaque material."
+    },
+    "sol-top-bar-reload-control": {
+      "category": "improved",
+      "message": "The window-top bar keeps its reload button beside back and forward at every width the bar offers."
+    },
+    "sol-page-actions-settings-rows": {
+      "category": "improved",
+      "message": "Settings and Private Browsing left the sidebar's bottom rail for the page actions menu, leaving the rail to the Space switcher, archive and New Tab."
+    },
+    "sol-custom-page-actions-icon": {
+      "category": "new",
+      "message": "Look and Feel takes an image of your own to wear on the page actions menu's button in place of the system's ellipsis."
     }
   }
 }

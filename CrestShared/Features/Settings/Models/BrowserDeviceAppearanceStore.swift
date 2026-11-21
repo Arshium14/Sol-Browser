@@ -168,6 +168,7 @@ final class BrowserDeviceAppearanceStore {
     static let tabHoverPreviewKey = "crest.appearance.hover-preview.tabs"
     static let folderHoverPreviewKey = "crest.appearance.hover-preview.folders"
     static let spaceIconsKey = "crest.appearance.space-icons"
+    static let menuIconKey = "crest.appearance.menu-icon"
     static let maximumCornerRadius: Double = 40
     /// How long the choices stay still before the store writes them out.
     static let settleDelay = Duration.milliseconds(300)
@@ -203,6 +204,11 @@ final class BrowserDeviceAppearanceStore {
     /// Where the windows show a page's address, navigation and site controls.
     /// Only the Mac offers the choice.
     var addressBarPlacement: BrowserAddressBarPlacement {
+        didSet { saveSoon() }
+    }
+    /// The PNG data of an image wearing the page actions menu's button in
+    /// place of the system's ellipsis, or nil for the ellipsis.
+    var menuIcon: Data? {
         didSet { saveSoon() }
     }
     /// How wide, in points, the strip along the window's edge is that shows a
@@ -444,6 +450,7 @@ final class BrowserDeviceAppearanceStore {
                 Double(BrowserSpaceIconSizing.clamped($0))
             } ?? BrowserLookAndFeelDefaults.spaceIconScale
         chosenSpaceIcons = BrowserSpaceIconDisplay.named(defaults.string(forKey: Self.spaceIconsKey))
+        menuIcon = defaults.data(forKey: Self.menuIconKey)
         tabScale =
             (defaults.object(forKey: BrowserSidebarDensityPreference.scaleKey) as? Double).flatMap {
                 $0.isFinite ? BrowserSidebarDensity.stepped($0) : nil
@@ -522,6 +529,11 @@ final class BrowserDeviceAppearanceStore {
             write(chosenSpaceIcons.name, forKey: Self.spaceIconsKey, in: defaults)
         } else if defaults.object(forKey: Self.spaceIconsKey) != nil {
             defaults.removeObject(forKey: Self.spaceIconsKey)
+        }
+        if let menuIcon {
+            write(menuIcon, forKey: Self.menuIconKey, in: defaults)
+        } else if defaults.object(forKey: Self.menuIconKey) != nil {
+            defaults.removeObject(forKey: Self.menuIconKey)
         }
         write(tabScale, forKey: BrowserSidebarDensityPreference.scaleKey, in: defaults)
         write(sidebarSpacing.name, forKey: BrowserSidebarDensityPreference.spacingKey, in: defaults)

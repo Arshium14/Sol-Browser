@@ -3,10 +3,10 @@ import SwiftUI
 /// The Space's own controls, laid out by whoever holds them: the floating
 /// capsule, or the system toolbar where the controls move out of the chrome.
 struct MobileSpaceActionButtons: View {
-    /// Which of the Space's controls a holder draws: the whole run, the run
-    /// without the archive, or the archive alone beside the Space switcher.
+    /// Which of the Space's controls a holder draws: the whole run, or the
+    /// archive alone beside the Space switcher.
     enum Subset {
-        case all, withoutArchive, archiveOnly
+        case all, archiveOnly
     }
 
     let browser: BrowserStore
@@ -19,9 +19,7 @@ struct MobileSpaceActionButtons: View {
         if subset != .archiveOnly {
             privateBrowsingButton
         }
-        if subset != .withoutArchive {
-            archiveButton
-        }
+        archiveButton
         if utilityPresentationStyle == .sheet, subset != .archiveOnly {
             downloadsButton
         }

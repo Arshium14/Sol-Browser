@@ -47,6 +47,7 @@ struct BrowserLookAndFeelSettingsPane: View {
     private func form(showsInlinePreviews: Bool) -> some View {
         BrowserSettingsPane(.lookAndFeel) {
             BrowserPlatformAddressBarSettingsSection()
+            BrowserPlatformMenuIconSettingsSection()
             Group {
                 BrowserSpaceIconsAppearanceGroup()
                 groups(showsInlinePreviews: showsInlinePreviews)

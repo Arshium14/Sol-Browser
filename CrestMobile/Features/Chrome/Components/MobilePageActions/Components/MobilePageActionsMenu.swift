@@ -10,6 +10,8 @@ struct MobilePageActionsMenu: View {
     /// Whether the menu is a toolbar item, whose label the system draws so a
     /// side toolbar can stand it on end with the others.
     var isToolbarItem = false
+    var showSettings: (() -> Void)? = nil
+    var togglePrivateBrowsing: (() -> Void)? = nil
 
     /// Where the menu's control sits in the window.
     @State private var frame: CGRect?
@@ -38,7 +40,9 @@ struct MobilePageActionsMenu: View {
                 pages: pages,
                 downloadsAccess: downloadsAccess,
                 hideToolbar: hideToolbar,
-                source: frame
+                source: frame,
+                showSettings: showSettings,
+                togglePrivateBrowsing: togglePrivateBrowsing
             )
             .crestMenuActionLabelStyle()
         } label: {
@@ -71,7 +75,7 @@ struct MobilePageActionsMenu: View {
 
     private var chromeLabel: some View {
         ZStack(alignment: .topTrailing) {
-            Image(systemName: systemImage)
+            BrowserPageActionsMenuIcon(systemImage: systemImage)
                 .font(.system(size: 13, weight: .semibold))
                 .foregroundStyle(
                     pages.blockedPopupNotice == nil

@@ -8,6 +8,10 @@ struct MobilePageActionsContent: View {
     /// The frame in the window of the control that opened these actions,
     /// which a sheet they open points at on iPad.
     var source: CGRect? = nil
+    /// Opens the browser's settings, where the shell holding these actions
+    /// can; a shell without them leaves the row out.
+    var showSettings: (() -> Void)? = nil
+    var togglePrivateBrowsing: (() -> Void)? = nil
 
     var body: some View {
         if let downloadsAccess {
@@ -231,6 +235,21 @@ struct MobilePageActionsContent: View {
                     }
                 }
                 .crestMenuActionLabelStyle()
+            }
+        }
+
+        if showSettings != nil || togglePrivateBrowsing != nil {
+            Section {
+                if let showSettings {
+                    Button("Settings", systemImage: "gearshape", action: showSettings)
+                }
+                if let togglePrivateBrowsing {
+                    Button(
+                        browser.isPrivateBrowsing ? "Leave Private Browsing" : "Private Browsing",
+                        systemImage: browser.isPrivateBrowsing ? "moon.zzz.fill" : "moon.zzz",
+                        action: togglePrivateBrowsing
+                    )
+                }
             }
         }
     }

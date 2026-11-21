@@ -16,15 +16,8 @@ struct MobileBrowserSidebarBottomChrome: View {
                 .toolbar { toolbarItems }
         } else if configuration.utilityPresentationStyle == .inline {
             // Arc's bottom rail: the Space switcher along the bottom with the
-            // archive at its leading end and New Tab at its trailing end, and
-            // the Space's remaining controls quiet above it.
+            // archive at its leading end and New Tab at its trailing end.
             VStack(spacing: 0) {
-                if showsSpaceActions {
-                    HStack(spacing: 0) {
-                        spaceActionButtons(subset: .withoutArchive)
-                        Spacer(minLength: 0)
-                    }
-                }
                 HStack(spacing: 6) {
                     if showsSpaceActions {
                         spaceActionButtons(subset: .archiveOnly)

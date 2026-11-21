@@ -198,15 +198,15 @@ struct MobileBrowserSidebarTopChrome: View {
                 browser: configuration.context.browser,
                 pages: pageActions,
                 systemImage: "ellipsis.circle",
-                isToolbarItem: isToolbarItem
+                isToolbarItem: isToolbarItem,
+                showSettings: configuration.spaceActionsConfiguration.showSettings,
+                togglePrivateBrowsing: configuration.spaceActionsConfiguration.togglePrivateBrowsing
             )
             .font(.system(size: 17, weight: .medium))
         } else {
-            Button(
-                "Page Actions",
-                systemImage: "ellipsis.circle",
-                action: {}
-            )
+            Button("Page Actions", action: {}) {
+                BrowserPageActionsMenuIcon()
+            }
             .disabled(true)
             .font(.system(size: 17, weight: .medium))
         }

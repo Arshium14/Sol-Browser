@@ -16,6 +16,8 @@ struct MobileRegularTopBar: View {
     let commandPaletteHandoff: BrowserCommandPaletteHandoff
     let showHistory: () -> Void
     let toggleSidebar: () -> Void
+    let showSettings: () -> Void
+    let togglePrivateBrowsing: () -> Void
 
     private var capabilities: BrowserInteractionCapabilities {
         BrowserInteractionCapabilities(supportsHover: true, supportsTouch: true)
@@ -39,7 +41,7 @@ struct MobileRegularTopBar: View {
                 capabilities: capabilities,
                 besideWindowControls: false
             )
-            .frame(width: 150)
+            .frame(width: 180)
 
             BrowserSidebarAddressField(
                 configuration: addressConfiguration,
@@ -48,8 +50,13 @@ struct MobileRegularTopBar: View {
                         pageActions.isAvailable,
                         !isAddressEditing
                     {
-                        MobilePageActionsContent(browser: browser, pages: pageActions)
-                            .tint(.primary)
+                        MobilePageActionsContent(
+                            browser: browser,
+                            pages: pageActions,
+                            showSettings: showSettings,
+                            togglePrivateBrowsing: togglePrivateBrowsing
+                        )
+                        .tint(.primary)
                     }
                 }
             )
@@ -66,6 +73,9 @@ struct MobileRegularTopBar: View {
                 spaces: browser.availableSpaces,
                 selectedSpaceID: browser.shownSpace?.id)
         )
+        // The bar stands over the Space gradient the window draws, so its
+        // surfaces wear translucent fills over it, as the sidebar's do.
+        .environment(\.sidebarTranslucentSurfaces, true)
     }
 
     @ViewBuilder
@@ -75,13 +85,17 @@ struct MobileRegularTopBar: View {
                 browser: browser,
                 pages: pageActions,
                 systemImage: "ellipsis.circle",
-                isToolbarItem: false
+                isToolbarItem: false,
+                showSettings: showSettings,
+                togglePrivateBrowsing: togglePrivateBrowsing
             )
             .font(.system(size: 17, weight: .medium))
         } else {
-            Button("Page Actions", systemImage: "ellipsis.circle", action: {})
-                .disabled(true)
-                .font(.system(size: 17, weight: .medium))
+            Button("Page Actions", action: {}) {
+                BrowserPageActionsMenuIcon()
+            }
+            .disabled(true)
+            .font(.system(size: 17, weight: .medium))
         }
     }
 

@@ -337,7 +337,9 @@ struct MobileBrowserRootContent: View, BrowserChromeAnimating {
                         compactChromeNamespace: compactChromeNamespace,
                         commandPaletteHandoff: commandPaletteHandoff,
                         showHistory: presentHistoryFromCommand,
-                        toggleSidebar: toggleRegularSidebar
+                        toggleSidebar: toggleRegularSidebar,
+                        showSettings: model.openSettings,
+                        togglePrivateBrowsing: togglePrivateBrowsing
                     )
                 )
                 .onChange(of: layout.splitsPagesAtFold, initial: true) { _, splits in
