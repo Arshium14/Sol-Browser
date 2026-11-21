@@ -5817,6 +5817,10 @@
     "sol-page-actions-fallback-button-role": {
       "category": "internal",
       "message": "The disabled page actions fallback button names its role explicitly, the argument the String title initializer with a custom label requires."
+    },
+    "sol-page-actions-fallback-button-form": {
+      "category": "internal",
+      "message": "The disabled page actions fallback button takes the plain action-and-label form with its own accessibility name, no titled initializer with a custom label resolving in the iOS 26 SDK."
     }
   }
 }
