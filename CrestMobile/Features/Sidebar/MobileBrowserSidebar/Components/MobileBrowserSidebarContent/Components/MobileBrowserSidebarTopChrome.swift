@@ -204,7 +204,7 @@ struct MobileBrowserSidebarTopChrome: View {
             )
             .font(.system(size: 17, weight: .medium))
         } else {
-            Button("Page Actions", action: {}) {
+            Button("Page Actions", role: nil, action: {}) {
                 BrowserPageActionsMenuIcon()
             }
             .disabled(true)
