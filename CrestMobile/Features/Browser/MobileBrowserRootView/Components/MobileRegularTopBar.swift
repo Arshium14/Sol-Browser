@@ -27,7 +27,7 @@ struct MobileRegularTopBar: View {
     var body: some View {
         barContent
             .labelStyle(.iconOnly)
-            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { barWidth = $0 }
+            .onGeometryChange(for: CGFloat.self, of: \.size.width) { barWidth = $0 }
             .padding(.horizontal, BrowserSidebarMetrics.layerInset)
             .padding(.vertical, 6)
             .modifier(

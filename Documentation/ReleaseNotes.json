@@ -5837,6 +5837,10 @@
     "sol-start-page-search-only": {
       "category": "improved",
       "message": "The touch start page is the search field alone: the app mark and Start Page title stay on the desktop page."
+    },
+    "sol-top-bar-width-reading-form": {
+      "category": "internal",
+      "message": "The window-top bar reads its width through the keypath form of onGeometryChange, the single-closure spelling the repository's swift-format contract accepts."
     }
   }
 }
