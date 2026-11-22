@@ -5869,6 +5869,30 @@
     "sol-top-bar-control-order": {
       "category": "fixed",
       "message": "The window-top bar's leading cluster matches the reference layout: the sidebar toggle leads, Split View stands beside it, then back, forward, and reload."
+    },
+    "sol-upstream-webkit-page-close": {
+      "category": "fixed",
+      "message": "Pulled from upstream Crest: a WebKit page now closes when it ends, so a late commit can no longer crash WebKit."
+    },
+    "sol-upstream-ended-page-reload": {
+      "category": "fixed",
+      "message": "Pulled from upstream Crest: an ended page no longer loads again on iPhone and iPad."
+    },
+    "sol-upstream-filter-shutdown-wait": {
+      "category": "fixed",
+      "message": "Pulled from upstream Crest: the core waits for content-filter conversions to finish before it closes."
+    },
+    "sol-upstream-sidebar-scroll-jump": {
+      "category": "fixed",
+      "message": "Pulled from upstream Crest: a long sidebar no longer jumps back while it scrolls down."
+    },
+    "sol-upstream-audit-fixes": {
+      "category": "fixed",
+      "message": "Pulled from upstream Crest: six audited fixes, including the iPhone and iPad padlock now showing the security the core judged for the page instead of the address's scheme."
+    },
+    "sol-upstream-chromium-157-0-8103-81": {
+      "category": "improved",
+      "message": "Pulled from upstream Crest: the Chromium engine source updates to 157.0.8103.81."
     }
   }
 }

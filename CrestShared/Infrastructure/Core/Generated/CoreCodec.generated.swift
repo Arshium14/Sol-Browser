@@ -7,7 +7,7 @@ import Foundation
 enum CoreCodec {
     /// SHA-256 of the canonical contract schema. The core refuses any other.
     static let fingerprint: [UInt8] = [
-        0x8e, 0xc5, 0xff, 0xd8, 0x60, 0x01, 0xce, 0x5e, 0xf3, 0x9c, 0xfb, 0xec, 0xf8, 0x8b, 0xa5, 0x41, 0x89, 0x7c, 0x7e, 0xe5, 0x2f, 0x2a, 0x5d, 0xe7, 0x9e, 0xdb, 0x6c, 0x8b, 0xeb, 0xa2, 0x92, 0xb7
+        0x95, 0xc3, 0xe3, 0xe4, 0x7d, 0x12, 0x69, 0xdd, 0x7a, 0xb3, 0x51, 0x40, 0x97, 0x1a, 0x6c, 0xfc, 0xb3, 0xdc, 0x39, 0xc1, 0xec, 0x06, 0x93, 0x5b, 0xa7, 0x25, 0xb3, 0x00, 0x9d, 0x2a, 0x46, 0x21
     ]
     /// SHA-256 of the engine contract alone, which an engine binding registers with.
     static let engineFingerprint: [UInt8] = [
@@ -11718,12 +11718,14 @@ extension ImportPasswordSource {
     init(from reader: inout WireReader) throws(WireError) {
         let profileName = try reader.readString()
         let host = try reader.readString()
-        self.init(profileName: profileName, host: host)
+        let isSecure = try reader.readBool()
+        self.init(profileName: profileName, host: host, isSecure: isSecure)
     }
 
     func encode(into writer: inout WireWriter) {
         writer.writeString(profileName)
         writer.writeString(host)
+        writer.writeBool(isSecure)
     }
 }
 
@@ -22663,6 +22665,7 @@ extension SetupReviewSpace {
         }
         let includesPasswords = try reader.readBool()
         let passwordCount = try reader.readInt()
+        let insecurePasswordCount = try reader.readInt()
         let extensionsCount = try reader.readCount()
         var extensions: [ImportExtension] = []
         extensions.reserveCapacity(extensionsCount)
@@ -22693,7 +22696,7 @@ extension SetupReviewSpace {
             let broughtExtensionsElement = try ImportExtension(from: &reader)
             broughtExtensions.append(broughtExtensionsElement)
         }
-        self.init(source: source, included: included, destinationID: destinationID, customization: customization, includedTabIDs: includedTabIDs, duplicateTabIDs: duplicateTabIDs, matchedTabIDs: matchedTabIDs, placements: placements, includesPasswords: includesPasswords, passwordCount: passwordCount, extensions: extensions, includedExtensionIDs: includedExtensionIDs, joinsGroupOf: joinsGroupOf, shownName: shownName, bringsPasswords: bringsPasswords, broughtExtensions: broughtExtensions)
+        self.init(source: source, included: included, destinationID: destinationID, customization: customization, includedTabIDs: includedTabIDs, duplicateTabIDs: duplicateTabIDs, matchedTabIDs: matchedTabIDs, placements: placements, includesPasswords: includesPasswords, passwordCount: passwordCount, insecurePasswordCount: insecurePasswordCount, extensions: extensions, includedExtensionIDs: includedExtensionIDs, joinsGroupOf: joinsGroupOf, shownName: shownName, bringsPasswords: bringsPasswords, broughtExtensions: broughtExtensions)
     }
 
     func encode(into writer: inout WireWriter) {
@@ -22724,6 +22727,7 @@ extension SetupReviewSpace {
         }
         writer.writeBool(includesPasswords)
         writer.writeInt(passwordCount)
+        writer.writeInt(insecurePasswordCount)
         writer.writeCount(extensions.count)
         for element0 in extensions {
             element0.encode(into: &writer)
@@ -28009,20 +28013,6 @@ extension SpaceAccessPolicy {
     }
 }
 
-extension StorageFailure {
-    init(from reader: inout WireReader) throws(WireError) {
-        let rawValue = try reader.readEnum()
-        guard let value = StorageFailure(rawValue: rawValue) else {
-            throw WireError.malformed("Unknown StorageFailure \(rawValue)")
-        }
-        self = value
-    }
-
-    func encode(into writer: inout WireWriter) {
-        writer.writeEnum(rawValue)
-    }
-}
-
 extension SystemPasswordWriteThroughAvailability {
     init(from reader: inout WireReader) throws(WireError) {
         let rawValue = try reader.readEnum()
@@ -29722,6 +29712,20 @@ extension StartupBehavior {
         let tag = try reader.readEnum()
         guard Self.all.indices.contains(tag) else {
             throw WireError.malformed("Unknown StartupBehavior \(tag)")
+        }
+        self = Self.all[tag]
+    }
+
+    func encode(into writer: inout WireWriter) {
+        writer.writeEnum(tag)
+    }
+}
+
+extension StorageFailure {
+    init(from reader: inout WireReader) throws(WireError) {
+        let tag = try reader.readEnum()
+        guard Self.all.indices.contains(tag) else {
+            throw WireError.malformed("Unknown StorageFailure \(tag)")
         }
         self = Self.all[tag]
     }
