@@ -32,10 +32,11 @@ struct MobileRegularTopBar: View {
             .padding(.horizontal, BrowserSidebarMetrics.layerInset)
             .padding(.vertical, 3)
             // The band rides in the status bar's own strip, so the chrome
-            // costs the page nothing above it; the controls keep clear of the
-            // clock and the battery the system draws at either corner.
-            .padding(.leading, 52)
-            .padding(.trailing, 68)
+            // costs the page nothing above it; the clusters keep clear of the
+            // clock with its date at the leading corner and the Wi-Fi, VPN
+            // and battery marks at the trailing one.
+            .padding(.leading, 150)
+            .padding(.trailing, 135)
             .ignoresSafeArea(.container, edges: .top)
             .modifier(
                 SpaceForegroundBlend(
@@ -77,7 +78,7 @@ struct MobileRegularTopBar: View {
     }
 
     private var centeredFieldWidth: CGFloat {
-        BrowserDeviceAppearanceStore.shared.compactAddressBar ? 400 : 520
+        BrowserDeviceAppearanceStore.shared.compactAddressBar ? 280 : 360
     }
 
     private var splitToggle: some View {

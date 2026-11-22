@@ -5893,6 +5893,18 @@
     "sol-upstream-chromium-157-0-8103-81": {
       "category": "improved",
       "message": "Pulled from upstream Crest: the Chromium engine source updates to 157.0.8103.81."
+    },
+    "sol-top-bar-status-clearance": {
+      "category": "fixed",
+      "message": "The window-top bar's clusters now keep clear of the iPad status bar's clock and date at the leading corner and its Wi-Fi, VPN and battery marks at the trailing one, so nothing intersects."
+    },
+    "sol-top-bar-compact-pill": {
+      "category": "improved",
+      "message": "The centered address pill hugs the address as the reference chrome does, instead of spanning half the window."
+    },
+    "sol-sidebar-tabs-stand-higher": {
+      "category": "improved",
+      "message": "With the address across the top, the tab list stands higher: the redundant New Tab row steps aside (the bottom rail still offers it) and the pinned grid keeps a narrower band, so the tabs gain the height back."
     }
   }
 }

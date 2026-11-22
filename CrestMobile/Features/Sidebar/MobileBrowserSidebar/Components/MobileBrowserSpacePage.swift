@@ -9,6 +9,7 @@ import SwiftUI
 /// compact page can answer.
 struct MobileBrowserSpacePage: View {
     @Environment(BrowserSidebarInteractionState.self) private var sidebarInteraction
+    @Environment(\.mobileBrowserAddressInTopBar) private var addressInTopBar
     let space: SpaceModel
     let browser: BrowserStore
     let pages: MobileBrowserPageStore
@@ -43,7 +44,9 @@ struct MobileBrowserSpacePage: View {
                 .equatable()
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.horizontal, BrowserSidebarMetrics.layerInset)
-                .padding(.vertical, 10)
+                // With the address across the top the tab run starts as high
+                // as the pinned grid lets it.
+                .padding(.vertical, addressInTopBar ? 4 : 10)
                 // The pinned tabs a neighbouring Space shows too stay still
                 // while the strip pages to it, and one of the two draws them.
                 // The pager's own scroll offset moves them, with no update.

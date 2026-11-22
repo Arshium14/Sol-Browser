@@ -24,6 +24,10 @@ struct BrowserInteractionCapabilities: Equatable, Sendable {
     /// Allows selecting multiple sidebar items for shared batch actions.
     var supportsMultiSelection = true
 
+    /// Starts the current-tab run with the new-tab row. Shells whose bottom
+    /// chrome already offers New Tab lead with the tabs themselves.
+    var leadsTabListWithNewTabRow = true
+
     var allowsMultiSelection: Bool { supportsOrganization && supportsMultiSelection }
 }
 

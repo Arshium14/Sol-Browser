@@ -65,6 +65,7 @@ struct MobileBrowserSidebarSurface: View {
 
     @Environment(\.colorScheme) private var colorScheme
     @Environment(\.mobileBrowserControlPlacement) private var controlPlacement
+    @Environment(\.mobileBrowserAddressInTopBar) private var addressInTopBar
     @State private var showsPasswords = false
     @State private var presentedSpaceSheet: MobileBrowserSidebarSpaceSheet?
 
@@ -104,7 +105,8 @@ struct MobileBrowserSidebarSurface: View {
             supportsTouch: true,
             reservesReorderSectionZones: true,
             usesNativeNavigationTransition: usesNativeNavigationTransition,
-            pairsRowWithPromotedSurface: false
+            pairsRowWithPromotedSurface: false,
+            leadsTabListWithNewTabRow: !addressInTopBar
         )
     }
 

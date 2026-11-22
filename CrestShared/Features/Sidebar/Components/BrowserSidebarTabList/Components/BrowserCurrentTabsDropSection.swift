@@ -19,7 +19,9 @@ struct BrowserCurrentTabsDropSection: View {
     var body: some View {
         let list = context.space.sidebar.section(.current)
         VStack(spacing: 0) {
-            BrowserNewTabRow(capabilities: context.capabilities, action: openNewTab)
+            if context.capabilities.leadsTabListWithNewTabRow {
+                BrowserNewTabRow(capabilities: context.capabilities, action: openNewTab)
+            }
 
             if context.capabilities.reservesReorderSectionZones {
                 BrowserSidebarListRows(list: list, context: context).equatable()
