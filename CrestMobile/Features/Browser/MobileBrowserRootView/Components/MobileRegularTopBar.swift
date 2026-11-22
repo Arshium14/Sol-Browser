@@ -31,6 +31,12 @@ struct MobileRegularTopBar: View {
             .onGeometryChange(for: CGFloat.self, of: \.size.width) { barWidth = $0 }
             .padding(.horizontal, BrowserSidebarMetrics.layerInset)
             .padding(.vertical, 3)
+            // The band rides in the status bar's own strip, so the chrome
+            // costs the page nothing above it; the controls keep clear of the
+            // clock and the battery the system draws at either corner.
+            .padding(.leading, 52)
+            .padding(.trailing, 68)
+            .ignoresSafeArea(.container, edges: .top)
             .modifier(
                 SpaceForegroundBlend(
                     spaces: browser.availableSpaces,
@@ -49,25 +55,23 @@ struct MobileRegularTopBar: View {
         if barWidth >= 700 {
             ZStack {
                 HStack(spacing: 8) {
-                    splitToggle
                     sidebarToggle
+                    splitToggle
                     navigationControls
                     Spacer(minLength: 0)
                     pageActionsMenu
-                    batteryReadout
                 }
                 addressField
                     .frame(maxWidth: min(centeredFieldWidth, barWidth - 520))
             }
         } else {
             HStack(spacing: 8) {
-                splitToggle
                 sidebarToggle
+                splitToggle
                 navigationControls
                 addressField
                     .frame(maxWidth: .infinity)
                 pageActionsMenu
-                batteryReadout
             }
         }
     }
@@ -84,12 +88,6 @@ struct MobileRegularTopBar: View {
         .buttonStyle(CrestChromeButtonStyle())
         .accessibilityLabel("Split View")
         .accessibilityIdentifier("browser-split-toggle")
-    }
-
-    /// The charge readout stands where a desktop shell's window buttons would.
-    private var batteryReadout: some View {
-        MobileTopBarBatteryIndicator()
-            .padding(.leading, 2)
     }
 
     private var sidebarToggle: some View {

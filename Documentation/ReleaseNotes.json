@@ -5861,6 +5861,14 @@
     "sol-private-download-test-holds-download": {
       "category": "internal",
       "message": "The private disguised-download test holds the WebKit download through its run, so the download cannot deallocate while the core's item still idles and record the invalid transition that failed the simulator suite."
+    },
+    "sol-top-bar-status-band": {
+      "category": "improved",
+      "message": "The window-top bar now rides in the iPad's own status band instead of stacking below it: the clock and battery keep their corners, the drawn readout is gone, and the page and tab list win back the height the extra strip used to take."
+    },
+    "sol-top-bar-control-order": {
+      "category": "fixed",
+      "message": "The window-top bar's leading cluster matches the reference layout: the sidebar toggle leads, Split View stands beside it, then back, forward, and reload."
     }
   }
 }
