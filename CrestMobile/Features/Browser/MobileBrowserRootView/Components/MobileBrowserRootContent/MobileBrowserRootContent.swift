@@ -339,7 +339,8 @@ struct MobileBrowserRootContent: View, BrowserChromeAnimating {
                         showHistory: presentHistoryFromCommand,
                         toggleSidebar: toggleRegularSidebar,
                         showSettings: model.openSettings,
-                        togglePrivateBrowsing: togglePrivateBrowsing
+                        togglePrivateBrowsing: togglePrivateBrowsing,
+                        toggleSplit: { _ = model.splitWithNextTabFromCommand() }
                     )
                 )
                 .onChange(of: layout.splitsPagesAtFold, initial: true) { _, splits in

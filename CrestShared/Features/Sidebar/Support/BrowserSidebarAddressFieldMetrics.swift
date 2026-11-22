@@ -122,4 +122,33 @@ struct BrowserSidebarAddressFieldMetrics: Equatable, Sendable {
         leadingGlyphSlot: nil,
         clearControlFont: .system(size: 13, weight: .medium)
     )
+
+    /// The window-top bar: an Arc-thin pill, so the strip across the top gives
+    /// the page back every point the chrome does not need.
+    static let topBar = BrowserSidebarAddressFieldMetrics(
+        contentSpacing: 6,
+        accessorySpacing: 2,
+        horizontalPadding: 8,
+        height: 30,
+        growsWithContent: false,
+        editingRingColor: Color.accentColor.opacity(0.7),
+        editingRingWidth: 1,
+        leadingGlyphFont: .system(size: 11, weight: .medium),
+        leadingGlyphSlot: nil,
+        clearControlFont: .system(size: 12, weight: .medium)
+    )
+
+    /// The window-top bar the person asked to draw smaller still: a 26pt pill.
+    static let topBarCompact = BrowserSidebarAddressFieldMetrics(
+        contentSpacing: 5,
+        accessorySpacing: 2,
+        horizontalPadding: 7,
+        height: 26,
+        growsWithContent: false,
+        editingRingColor: Color.accentColor.opacity(0.7),
+        editingRingWidth: 1,
+        leadingGlyphFont: .system(size: 10, weight: .medium),
+        leadingGlyphSlot: nil,
+        clearControlFont: .system(size: 11, weight: .medium)
+    )
 }

@@ -81,7 +81,7 @@ struct MobileRegularBrowserLayout<Sidebar: View, Detail: View, TopBar: View>: Vi
             if effectivePresentation == .collapsed {
                 BrowserCollapsedSidebarRevealControl(
                     capabilities: BrowserInteractionCapabilities(
-                        supportsTouch: true
+                        supportsHover: true, supportsTouch: true
                     ),
                     showSidebar: showSidebar, edge: sidebarEdge
                 )

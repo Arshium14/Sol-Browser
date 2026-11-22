@@ -48,8 +48,13 @@ struct BrowserSidebarAddressFieldConfiguration {
     var addressDisplayAccessibilityIdentifier = "address-display"
     var prompt: LocalizedStringKey = "Search or enter website"
     var branding: SpaceBranding? = nil
+    /// A shell that draws the field at a height of its own, as the window-top
+    /// bar's thin pill does, names it here instead of taking the shell-wide
+    /// answer.
+    var metricsOverride: BrowserSidebarAddressFieldMetrics? = nil
 
     var metrics: BrowserSidebarAddressFieldMetrics {
+        if let metricsOverride { return metricsOverride }
         if capabilities.supportsTouch, BrowserDeviceAppearanceStore.shared.compactAddressBar {
             return .touchCompact
         }

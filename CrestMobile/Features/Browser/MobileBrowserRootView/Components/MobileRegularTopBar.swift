@@ -18,6 +18,7 @@ struct MobileRegularTopBar: View {
     let toggleSidebar: () -> Void
     let showSettings: () -> Void
     let togglePrivateBrowsing: () -> Void
+    var toggleSplit: () -> Void = {}
     @State private var barWidth: CGFloat = 0
 
     private var capabilities: BrowserInteractionCapabilities {
@@ -29,7 +30,7 @@ struct MobileRegularTopBar: View {
             .labelStyle(.iconOnly)
             .onGeometryChange(for: CGFloat.self, of: \.size.width) { barWidth = $0 }
             .padding(.horizontal, BrowserSidebarMetrics.layerInset)
-            .padding(.vertical, 6)
+            .padding(.vertical, 3)
             .modifier(
                 SpaceForegroundBlend(
                     spaces: browser.availableSpaces,
@@ -48,27 +49,47 @@ struct MobileRegularTopBar: View {
         if barWidth >= 700 {
             ZStack {
                 HStack(spacing: 8) {
+                    splitToggle
                     sidebarToggle
                     navigationControls
                     Spacer(minLength: 0)
                     pageActionsMenu
+                    batteryReadout
                 }
                 addressField
-                    .frame(maxWidth: min(centeredFieldWidth, barWidth - 496))
+                    .frame(maxWidth: min(centeredFieldWidth, barWidth - 520))
             }
         } else {
             HStack(spacing: 8) {
+                splitToggle
                 sidebarToggle
                 navigationControls
                 addressField
                     .frame(maxWidth: .infinity)
                 pageActionsMenu
+                batteryReadout
             }
         }
     }
 
     private var centeredFieldWidth: CGFloat {
-        BrowserDeviceAppearanceStore.shared.compactAddressBar ? 480 : 640
+        BrowserDeviceAppearanceStore.shared.compactAddressBar ? 400 : 520
+    }
+
+    private var splitToggle: some View {
+        Button(action: toggleSplit) {
+            Image(systemName: "rectangle.split.2x1")
+                .font(.system(size: 15, weight: .regular))
+        }
+        .buttonStyle(CrestChromeButtonStyle())
+        .accessibilityLabel("Split View")
+        .accessibilityIdentifier("browser-split-toggle")
+    }
+
+    /// The charge readout stands where a desktop shell's window buttons would.
+    private var batteryReadout: some View {
+        MobileTopBarBatteryIndicator()
+            .padding(.leading, 2)
     }
 
     private var sidebarToggle: some View {
@@ -155,7 +176,9 @@ struct MobileRegularTopBar: View {
             spaceID: selectedSpaceID,
             spaceHasAddress: spaceHasAddress,
             commandPaletteHandoff: commandPaletteHandoff,
-            branding: browser.shownSpace.map(\.settings.look)
+            branding: browser.shownSpace.map(\.settings.look),
+            metricsOverride: BrowserDeviceAppearanceStore.shared.compactAddressBar
+                ? .topBarCompact : .topBar
         )
     }
 

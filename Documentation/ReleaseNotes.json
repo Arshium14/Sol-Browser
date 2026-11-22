@@ -5841,6 +5841,22 @@
     "sol-top-bar-width-reading-form": {
       "category": "internal",
       "message": "The window-top bar reads its width through the keypath form of onGeometryChange, the single-closure spelling the repository's swift-format contract accepts."
+    },
+    "sol-top-bar-arc-pill": {
+      "category": "improved",
+      "message": "The window-top bar sits thinner over the page: an Arc-style pill for the address and a tighter strip, giving the webpage back the height the chrome used to take."
+    },
+    "sol-top-bar-split-toggle": {
+      "category": "new",
+      "message": "The window-top bar leads with a Split View button beside the sidebar toggle, as the compact chrome's leading cluster offers it."
+    },
+    "sol-top-bar-battery-readout": {
+      "category": "new",
+      "message": "A battery readout stands at the trailing end of the window-top bar, where a desktop shell's window buttons would be."
+    },
+    "sol-sidebar-hover-reveal": {
+      "category": "improved",
+      "message": "With the address across the top, resting the pointer on the window's edge reveals the sidebar over the page, as a press and an inward swipe already did."
     }
   }
 }
