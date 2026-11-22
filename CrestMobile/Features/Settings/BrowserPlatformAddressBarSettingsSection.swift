@@ -46,6 +46,12 @@ struct BrowserPlatformAddressBarSettingsSection: View {
             .frame(maxWidth: .infinity)
             .accessibilityElement(children: .contain)
             .accessibilityIdentifier("address-bar-placement")
+            Picker("Size", selection: $appearance.compactAddressBar) {
+                Text("Large").tag(false)
+                Text("Small").tag(true)
+            }
+            .pickerStyle(.segmented)
+            .accessibilityIdentifier("address-bar-size")
         }
     }
 

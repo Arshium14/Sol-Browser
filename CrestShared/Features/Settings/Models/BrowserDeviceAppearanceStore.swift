@@ -169,6 +169,9 @@ final class BrowserDeviceAppearanceStore {
     static let folderHoverPreviewKey = "crest.appearance.hover-preview.folders"
     static let spaceIconsKey = "crest.appearance.space-icons"
     static let menuIconKey = "crest.appearance.menu-icon"
+    static let compactAddressBarKey = "crest.appearance.compact-address-bar"
+    static let spaceWallpapersKey = "crest.appearance.space-wallpapers"
+    static let spaceWallpaperBlurKey = "crest.appearance.space-wallpaper-blur"
     static let maximumCornerRadius: Double = 40
     /// How long the choices stay still before the store writes them out.
     static let settleDelay = Duration.milliseconds(300)
@@ -209,6 +212,19 @@ final class BrowserDeviceAppearanceStore {
     /// The PNG data of an image wearing the page actions menu's button in
     /// place of the system's ellipsis, or nil for the ellipsis.
     var menuIcon: Data? {
+        didSet { saveSoon() }
+    }
+    /// Whether touch address fields draw at the smaller band rather than the
+    /// finger-sized one.
+    var compactAddressBar: Bool {
+        didSet { saveSoon() }
+    }
+    /// The PNG data of each Space's chosen wallpaper, by Space identity.
+    var spaceWallpapers: [UUID: Data] {
+        didSet { saveSoon() }
+    }
+    /// How far each Space's wallpaper is blurred, in points, by Space identity.
+    var spaceWallpaperBlur: [UUID: Double] {
         didSet { saveSoon() }
     }
     /// How wide, in points, the strip along the window's edge is that shows a
@@ -451,6 +467,9 @@ final class BrowserDeviceAppearanceStore {
             } ?? BrowserLookAndFeelDefaults.spaceIconScale
         chosenSpaceIcons = BrowserSpaceIconDisplay.named(defaults.string(forKey: Self.spaceIconsKey))
         menuIcon = defaults.data(forKey: Self.menuIconKey)
+        compactAddressBar = defaults.bool(forKey: Self.compactAddressBarKey)
+        spaceWallpapers = Self.wallpapers(in: defaults.dictionary(forKey: Self.spaceWallpapersKey))
+        spaceWallpaperBlur = Self.blurs(in: defaults.dictionary(forKey: Self.spaceWallpaperBlurKey))
         tabScale =
             (defaults.object(forKey: BrowserSidebarDensityPreference.scaleKey) as? Double).flatMap {
                 $0.isFinite ? BrowserSidebarDensity.stepped($0) : nil
@@ -510,6 +529,22 @@ final class BrowserDeviceAppearanceStore {
         colorScheme == .dark && dimming > 0
     }
 
+    private static func wallpapers(in stored: [String: Any]?) -> [UUID: Data] {
+        var wallpapers: [UUID: Data] = [:]
+        for (key, value) in stored ?? [:] {
+            if let id = UUID(uuidString: key), let data = value as? Data { wallpapers[id] = data }
+        }
+        return wallpapers
+    }
+
+    private static func blurs(in stored: [String: Any]?) -> [UUID: Double] {
+        var blurs: [UUID: Double] = [:]
+        for (key, value) in stored ?? [:] {
+            if let id = UUID(uuidString: key), let blur = value as? Double { blurs[id] = blur }
+        }
+        return blurs
+    }
+
     // MARK: - Actions - Saving
 
     /// Writes every choice that changed now, rather than once they settle.
@@ -535,6 +570,13 @@ final class BrowserDeviceAppearanceStore {
         } else if defaults.object(forKey: Self.menuIconKey) != nil {
             defaults.removeObject(forKey: Self.menuIconKey)
         }
+        write(compactAddressBar, forKey: Self.compactAddressBarKey, in: defaults)
+        write(
+            spaceWallpapers.reduce(into: [String: Data]()) { $0[$1.key.uuidString] = $1.value },
+            forKey: Self.spaceWallpapersKey, in: defaults)
+        write(
+            spaceWallpaperBlur.reduce(into: [String: Double]()) { $0[$1.key.uuidString] = $1.value },
+            forKey: Self.spaceWallpaperBlurKey, in: defaults)
         write(tabScale, forKey: BrowserSidebarDensityPreference.scaleKey, in: defaults)
         write(sidebarSpacing.name, forKey: BrowserSidebarDensityPreference.spacingKey, in: defaults)
         write(peekSize, forKey: Self.peekSizeKey, in: defaults)

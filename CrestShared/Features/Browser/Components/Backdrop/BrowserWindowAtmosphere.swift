@@ -18,6 +18,7 @@ struct BrowserWindowAtmosphere: View {
             if let branding {
                 BrowserSpaceBannerBackground(branding: branding)
             }
+            BrowserSpaceWallpaper(spaceID: space?.id)
         }
         .accessibilityHidden(true)
     }

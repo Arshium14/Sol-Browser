@@ -5821,6 +5821,22 @@
     "sol-page-actions-fallback-button-form": {
       "category": "internal",
       "message": "The disabled page actions fallback button takes the plain action-and-label form with its own accessibility name, no titled initializer with a custom label resolving in the iOS 26 SDK."
+    },
+    "sol-top-bar-centered-fullscreen": {
+      "category": "improved",
+      "message": "The window-top address bar centers itself over the page when the window fills the screen, and keeps filling the gap between the controls in narrower Split View windows."
+    },
+    "sol-address-bar-size-choice": {
+      "category": "new",
+      "message": "Look and Feel offers a Size choice for the address bar: Large as it stands, or Small, a tighter band with tightened glyphs on touch."
+    },
+    "sol-space-wallpaper": {
+      "category": "new",
+      "message": "Each Space takes a wallpaper of your own behind its windows, with a Blur slider from sharp to soft and a reset that clears both, kept on this device."
+    },
+    "sol-start-page-search-only": {
+      "category": "improved",
+      "message": "The touch start page is the search field alone: the app mark and Start Page title stay on the desktop page."
     }
   }
 }

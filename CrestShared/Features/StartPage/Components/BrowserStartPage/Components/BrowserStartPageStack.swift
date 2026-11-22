@@ -11,7 +11,8 @@ struct BrowserStartPageStack: View {
             BrowserStartPageHeader(
                 isPrivateBrowsing: page.isPrivateBrowsing,
                 layout: page.layout,
-                colorScheme: page.headerColorScheme
+                colorScheme: page.headerColorScheme,
+                showsHeading: page.layout.showsHeading
             )
             // Nothing in the header takes a tap, so one there reaches the page.
             .allowsHitTesting(false)

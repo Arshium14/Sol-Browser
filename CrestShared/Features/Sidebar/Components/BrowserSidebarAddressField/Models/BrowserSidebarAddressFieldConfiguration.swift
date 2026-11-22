@@ -50,7 +50,10 @@ struct BrowserSidebarAddressFieldConfiguration {
     var branding: SpaceBranding? = nil
 
     var metrics: BrowserSidebarAddressFieldMetrics {
-        capabilities.addressFieldMetrics
+        if capabilities.supportsTouch, BrowserDeviceAppearanceStore.shared.compactAddressBar {
+            return .touchCompact
+        }
+        return capabilities.addressFieldMetrics
     }
 
     /// What the field's contents swap on: the Space shown, or none for a

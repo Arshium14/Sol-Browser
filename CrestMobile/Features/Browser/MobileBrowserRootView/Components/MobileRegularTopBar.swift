@@ -18,64 +18,100 @@ struct MobileRegularTopBar: View {
     let toggleSidebar: () -> Void
     let showSettings: () -> Void
     let togglePrivateBrowsing: () -> Void
+    @State private var barWidth: CGFloat = 0
 
     private var capabilities: BrowserInteractionCapabilities {
         BrowserInteractionCapabilities(supportsHover: true, supportsTouch: true)
     }
 
     var body: some View {
-        HStack(spacing: 8) {
-            Button(action: toggleSidebar) {
-                Image(
-                    systemName: BrowserDeviceAppearanceStore.shared.sidebarOnRight
-                        ? "sidebar.right" : "sidebar.left"
-                )
-                .font(.system(size: 17, weight: .regular))
-            }
-            .buttonStyle(CrestChromeButtonStyle())
-            .accessibilityLabel("Hide Sidebar")
-            .accessibilityIdentifier("browser-sidebar-toggle")
-
-            BrowserSidebarNavigationControls(
-                port: navigationPort,
-                capabilities: capabilities,
-                besideWindowControls: false
+        barContent
+            .labelStyle(.iconOnly)
+            .onGeometryChange(for: CGFloat.self) { $0.size.width } action: { barWidth = $0 }
+            .padding(.horizontal, BrowserSidebarMetrics.layerInset)
+            .padding(.vertical, 6)
+            .modifier(
+                SpaceForegroundBlend(
+                    spaces: browser.availableSpaces,
+                    selectedSpaceID: browser.shownSpace?.id)
             )
-            .frame(width: 180)
+            // The bar stands over the Space gradient the window draws, so its
+            // surfaces wear translucent fills over it, as the sidebar's do.
+            .environment(\.sidebarTranslucentSurfaces, true)
+    }
 
-            BrowserSidebarAddressField(
-                configuration: addressConfiguration,
-                fieldContextMenu: {
-                    if let pageActions = selectedPageActions,
-                        pageActions.isAvailable,
-                        !isAddressEditing
-                    {
-                        MobilePageActionsContent(
-                            browser: browser,
-                            pages: pageActions,
-                            showSettings: showSettings,
-                            togglePrivateBrowsing: togglePrivateBrowsing
-                        )
-                        .tint(.primary)
-                    }
+    /// A window wide enough to fill the screen centers the field over the
+    /// page, clear of both clusters; a narrower one, as Split View leaves,
+    /// lets the field fill the gap between them instead.
+    @ViewBuilder
+    private var barContent: some View {
+        if barWidth >= 700 {
+            ZStack {
+                HStack(spacing: 8) {
+                    sidebarToggle
+                    navigationControls
+                    Spacer(minLength: 0)
+                    pageActionsMenu
                 }
-            )
-            .modifier(SurfaceToneAppearance())
-            .frame(maxWidth: .infinity)
-
-            pageActionsMenu
+                addressField
+                    .frame(maxWidth: min(centeredFieldWidth, barWidth - 496))
+            }
+        } else {
+            HStack(spacing: 8) {
+                sidebarToggle
+                navigationControls
+                addressField
+                    .frame(maxWidth: .infinity)
+                pageActionsMenu
+            }
         }
-        .labelStyle(.iconOnly)
-        .padding(.horizontal, BrowserSidebarMetrics.layerInset)
-        .padding(.vertical, 6)
-        .modifier(
-            SpaceForegroundBlend(
-                spaces: browser.availableSpaces,
-                selectedSpaceID: browser.shownSpace?.id)
+    }
+
+    private var centeredFieldWidth: CGFloat {
+        BrowserDeviceAppearanceStore.shared.compactAddressBar ? 480 : 640
+    }
+
+    private var sidebarToggle: some View {
+        Button(action: toggleSidebar) {
+            Image(
+                systemName: BrowserDeviceAppearanceStore.shared.sidebarOnRight
+                    ? "sidebar.right" : "sidebar.left"
+            )
+            .font(.system(size: 17, weight: .regular))
+        }
+        .buttonStyle(CrestChromeButtonStyle())
+        .accessibilityLabel("Hide Sidebar")
+        .accessibilityIdentifier("browser-sidebar-toggle")
+    }
+
+    private var navigationControls: some View {
+        BrowserSidebarNavigationControls(
+            port: navigationPort,
+            capabilities: capabilities,
+            besideWindowControls: false
         )
-        // The bar stands over the Space gradient the window draws, so its
-        // surfaces wear translucent fills over it, as the sidebar's do.
-        .environment(\.sidebarTranslucentSurfaces, true)
+        .frame(width: 180)
+    }
+
+    private var addressField: some View {
+        BrowserSidebarAddressField(
+            configuration: addressConfiguration,
+            fieldContextMenu: {
+                if let pageActions = selectedPageActions,
+                    pageActions.isAvailable,
+                    !isAddressEditing
+                {
+                    MobilePageActionsContent(
+                        browser: browser,
+                        pages: pageActions,
+                        showSettings: showSettings,
+                        togglePrivateBrowsing: togglePrivateBrowsing
+                    )
+                    .tint(.primary)
+                }
+            }
+        )
+        .modifier(SurfaceToneAppearance())
     }
 
     @ViewBuilder

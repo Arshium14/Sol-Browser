@@ -25,6 +25,9 @@ struct BrowserStartPageLayout: Equatable {
     /// leaves its clear backdrop inside the window's safe area, which is what
     /// keeps the stack centred on the page area rather than on the window.
     let backgroundIgnoresSafeArea: Bool
+    /// Whether the stack draws its mark and title above the palette. Touch
+    /// leaves them out so the page is the search field alone.
+    let showsHeading: Bool
 
     static let macOSPage = BrowserStartPageLayout(
         spacing: 28,
@@ -34,7 +37,8 @@ struct BrowserStartPageLayout: Equatable {
         privateNoticeSpacing: 6,
         scrollsContent: false,
         showsSpaceBanner: false,
-        backgroundIgnoresSafeArea: false
+        backgroundIgnoresSafeArea: false,
+        showsHeading: true
     )
 
     static let mobileRegularPage = BrowserStartPageLayout(
@@ -45,7 +49,8 @@ struct BrowserStartPageLayout: Equatable {
         privateNoticeSpacing: 6,
         scrollsContent: false,
         showsSpaceBanner: false,
-        backgroundIgnoresSafeArea: true
+        backgroundIgnoresSafeArea: true,
+        showsHeading: false
     )
 
     static let mobileCompactPage = BrowserStartPageLayout(
@@ -56,6 +61,7 @@ struct BrowserStartPageLayout: Equatable {
         privateNoticeSpacing: 6,
         scrollsContent: true,
         showsSpaceBanner: true,
-        backgroundIgnoresSafeArea: true
+        backgroundIgnoresSafeArea: true,
+        showsHeading: false
     )
 }

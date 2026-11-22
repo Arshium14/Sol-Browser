@@ -15,6 +15,9 @@ struct BrowserStartPageHeader: View {
     /// Whether the header draws the app icon the person chose, which reads
     /// the app's live state. A preview draws Crest's own mark instead.
     var showsCurrentAppIcon = true
+    /// Whether the mark and title draw at all; a shell that wants the page to
+    /// be the search field alone leaves them out.
+    var showsHeading = true
 
     @ViewBuilder
     var body: some View {
@@ -28,13 +31,15 @@ struct BrowserStartPageHeader: View {
 
     @ViewBuilder
     private var content: some View {
-        icon
-            .frame(width: layout.markSize, height: layout.markSize)
-            .accessibilityHidden(true)
-        Text("Start Page")
-            .font(.largeTitle.weight(.semibold))
-            .foregroundStyle(.primary)
-            .multilineTextAlignment(.center)
+        if showsHeading {
+            icon
+                .frame(width: layout.markSize, height: layout.markSize)
+                .accessibilityHidden(true)
+            Text("Start Page")
+                .font(.largeTitle.weight(.semibold))
+                .foregroundStyle(.primary)
+                .multilineTextAlignment(.center)
+        }
 
         if isPrivateBrowsing {
             BrowserStartPagePrivateBrowsingNotice(

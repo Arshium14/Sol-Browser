@@ -107,4 +107,19 @@ struct BrowserSidebarAddressFieldMetrics: Equatable, Sendable {
         leadingGlyphSlot: nil,
         clearControlFont: .system(size: 15, weight: .medium)
     )
+
+    /// A touch shell the person asked to draw smaller: a 34pt floor with the
+    /// gutter and glyphs tightened to match, still allowed to grow for text.
+    static let touchCompact = BrowserSidebarAddressFieldMetrics(
+        contentSpacing: 6,
+        accessorySpacing: 4,
+        horizontalPadding: 10,
+        height: 34,
+        growsWithContent: true,
+        editingRingColor: Color.accentColor.opacity(0.7),
+        editingRingWidth: 1,
+        leadingGlyphFont: .system(size: 12, weight: .medium),
+        leadingGlyphSlot: nil,
+        clearControlFont: .system(size: 13, weight: .medium)
+    )
 }

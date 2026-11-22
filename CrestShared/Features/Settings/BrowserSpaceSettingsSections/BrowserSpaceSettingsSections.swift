@@ -19,6 +19,8 @@ struct BrowserSpaceSettingsSections: View {
             dismissKeyboard: dismissKeyboard
         )
 
+        BrowserSpaceWallpaperSection(space: space)
+
         BrowserSpaceGroupPinnedTabsSection(browser: browser, space: space)
 
         BrowserSpaceAccessPolicySection(
