@@ -5857,6 +5857,10 @@
     "sol-sidebar-hover-reveal": {
       "category": "improved",
       "message": "With the address across the top, resting the pointer on the window's edge reveals the sidebar over the page, as a press and an inward swipe already did."
+    },
+    "sol-private-download-test-holds-download": {
+      "category": "internal",
+      "message": "The private disguised-download test holds the WebKit download through its run, so the download cannot deallocate while the core's item still idles and record the invalid transition that failed the simulator suite."
     }
   }
 }

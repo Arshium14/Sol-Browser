@@ -38,16 +38,22 @@ final class MobileBrowserInteropTests: XCTestCase {
         )
         pages.select()
         let page = try XCTUnwrap(pages.activePage)
+        // The download outlives the start callback: released there, WebKit can
+        // deallocate it while the core's item still idles, and the idle deinit
+        // records an invalid transition the next read rethrows.
+        var heldDownload: WKDownload?
         defer {
             server.stop()
             try? FileManager.default.removeItem(at: destination)
             pages.downloadRiskConfirmation.cancelAll()
             pages.closePrivateBrowsingSession(browser.spaceModels.map(BrowserSpaceRuntimeAssignment.init(space:)))
+            heldDownload = nil
         }
 
         // User initiation bypasses the extra prompt for ordinary installers.
         // An executable disguised as an image still requires confirmation.
         page.webView.startDownload(using: URLRequest(url: sourceURL)) { download in
+            heldDownload = download
             page.webKitPage.startDownload(download, isUserInitiated: true)
         }
 
